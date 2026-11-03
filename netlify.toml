@@ -1,0 +1,28 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/terminal"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/free"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/analyzer"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/api/create-order"
+  to = "/.netlify/functions/create-order"
+  status = 200
+
+[[redirects]]
+  from = "/api/verify-payment"
+  to = "/.netlify/functions/verify-payment"
+  status = 200

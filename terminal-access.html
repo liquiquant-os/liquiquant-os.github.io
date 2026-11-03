@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiquiQuant OS | Terminal Access Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              emerald: '#10b981',
+              cyan: '#06b6d4',
+              gold: '#f59e0b',
+              purple: '#8b5cf6'
+            },
+            dark: {
+              950: '#07090e',
+              900: '#0b0f19',
+              850: '#0f172a',
+              800: '#1e293b',
+              border: '#1e293b'
+            }
+          },
+          fontFamily: {
+            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['"Inter"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #07090e;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 36px 36px, 36px 36px;
+    }
+    .glow-emerald {
+      box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+
+  <div class="max-w-4xl mx-auto space-y-8">
+    
+    <!-- HEADER -->
+    <header class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-dark-border">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-emerald/20 to-brand-cyan/20 border border-brand-emerald/40 flex items-center justify-center font-mono font-bold text-brand-emerald text-sm">
+          LQ
+        </div>
+        <div>
+          <span class="font-extrabold text-white text-base font-mono tracking-tight">LIQUIQUANT OS</span>
+          <span id="headerStatusBadge" class="text-brand-emerald font-mono text-xs px-2 py-0.5 rounded bg-brand-emerald/10 border border-brand-emerald/30 ml-2">VERIFIED GATEWAY</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 text-xs font-mono text-slate-400">
+        <span id="statusPulse" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span id="statusText">SECURITY STATUS: <strong class="text-brand-emerald">AUTHENTICATED</strong></span>
+      </div>
+    </header>
+
+    <!-- ACCESS DENIED STATE (DEFAULT IF NO VALID PAYMENT ID) -->
+    <div id="unauthorizedCard" class="hidden p-8 sm:p-12 rounded-3xl bg-dark-900 border border-rose-500/40 text-center">
+      <div class="w-16 h-16 mx-auto rounded-full bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 text-3xl font-black mb-4">
+        🔒
+      </div>
+      <div class="text-xs font-mono font-bold text-rose-400 uppercase tracking-widest mb-1">Access Denied • Cryptographic Gate</div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">No Confirmed Payment Detected</h1>
+      <p class="text-slate-400 text-sm max-w-lg mx-auto mb-6 leading-relaxed">
+        This terminal hub is locked. Files and workspace transfers are only released after a confirmed, bank-verified transaction ID from Razorpay or Gumroad.
+      </p>
+      <div class="p-4 rounded-xl bg-dark-950 border border-dark-border max-w-md mx-auto text-xs text-slate-400 font-mono text-left mb-6 space-y-1">
+        <div><span class="text-slate-600">Verification Error:</span> <span class="text-rose-400 font-bold">MISSING_PAYMENT_PROOF</span></div>
+        <div><span class="text-slate-600">Action Required:</span> Complete checkout on the official storefront.</div>
+      </div>
+      <a href="./" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-brand-emerald hover:bg-emerald-400 text-dark-950 font-bold text-xs uppercase tracking-wider font-mono transition">
+        ← Return to Storefront & Complete Checkout
+      </a>
+    </div>
+
+    <!-- UNLOCKED CONTENT (ONLY VISIBLE IF PAYMENT IS CONFIRMED) -->
+    <div id="unlockedContent" class="hidden space-y-8">
+      
+      <!-- VERIFIED HERO BANNER -->
+      <div class="p-6 sm:p-8 rounded-3xl bg-dark-900 border border-brand-emerald/40 glow-emerald text-center relative overflow-hidden">
+        <div class="w-16 h-16 mx-auto rounded-full bg-brand-emerald/10 border border-brand-emerald/30 flex items-center justify-center text-brand-emerald text-3xl font-black mb-4">
+          ✓
+        </div>
+        <div class="text-[11px] font-mono font-bold text-brand-cyan uppercase tracking-widest mb-1">Payment Verified • Automated Dispatch</div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white mb-3">Welcome to LiquiQuant OS</h1>
+        <p class="text-slate-300 text-sm max-w-xl mx-auto mb-6 leading-relaxed">
+          Your payment has been captured and verified. Access your Notion workspace template, Python MT5 execution bridges, and VIP Discord support below.
+        </p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto font-mono text-xs">
+          <div class="p-3 rounded-xl bg-dark-950 border border-dark-border text-left">
+            <div class="text-slate-500 text-[10px] uppercase">Edition</div>
+            <div id="editionBadge" class="text-white font-bold truncate">Institutional Suite</div>
+          </div>
+          <div class="p-3 rounded-xl bg-dark-950 border border-dark-border text-left">
+            <div class="text-slate-500 text-[10px] uppercase">Verified Payment ID</div>
+            <div id="refBadge" class="text-brand-emerald font-bold truncate">pay_verified</div>
+          </div>
+          <div class="p-3 rounded-xl bg-dark-950 border border-dark-border text-left">
+            <div class="text-slate-500 text-[10px] uppercase">Delivery</div>
+            <div class="text-brand-cyan font-bold">Instant Unlock</div>
+          </div>
+          <div class="p-3 rounded-xl bg-dark-950 border border-dark-border text-left">
+            <div class="text-slate-500 text-[10px] uppercase">License</div>
+            <div class="text-white font-bold">Lifetime Single</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN DELIVERY MODULES -->
+      <div class="grid md:grid-cols-2 gap-6">
+
+        <!-- MODULE 1: NOTION WORKSPACE -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-dark-900 border border-dark-border flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-2.5 py-1 rounded-md bg-brand-emerald/10 border border-brand-emerald/30 text-brand-emerald text-xs font-mono font-bold uppercase">Component 01</span>
+              <span class="text-xs font-mono text-slate-400">Cloud Duplication</span>
+            </div>
+            <h2 class="text-xl font-bold text-white mb-2">LiquiQuant Notion Quant Workspace</h2>
+            <p class="text-slate-400 text-xs leading-relaxed mb-6">
+              Institutional order flow hub, multi-asset lot calculator, drawdown shield rules, automated trade journal, and strategy playbook.
+            </p>
+            <ul class="text-xs text-slate-300 space-y-2 mb-6 font-mono">
+              <li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> 7-Point SMC Gatekeeper Scorecard</li>
+              <li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> Multi-Broker Webhook Database</li>
+              <li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> 1-Click Duplicate to Personal Notion</li>
+            </ul>
+          </div>
+          <a href="https://rainy-algebra-56a.notion.site/LiquiQuant-OS-Institutional-Trading-Desk-fc4e3a19cab34a89a8de2276ee567df3" target="_blank" class="w-full py-4 rounded-xl text-center text-xs font-bold uppercase tracking-wider text-dark-950 bg-gradient-to-r from-brand-emerald to-brand-cyan hover:from-emerald-400 hover:to-cyan-400 shadow-lg shadow-brand-emerald/25 transition block font-mono">
+            Duplicate Notion OS to Workspace ↗
+          </a>
+        </div>
+
+        <!-- MODULE 2: PYTHON MT5 CONNECTOR ZIP -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-dark-900 border border-dark-border flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-2.5 py-1 rounded-md bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan text-xs font-mono font-bold uppercase">Component 02</span>
+              <span class="text-xs font-mono text-slate-400">Offline Package</span>
+            </div>
+            <h2 class="text-xl font-bold text-white mb-2">Python MT5 Bridge & Webhook Bundle</h2>
+            <p class="text-slate-400 text-xs leading-relaxed mb-6">
+              Lightweight 0-lag execution bridge connecting TradingView alert webhooks directly into MetaTrader 5 with local drawdown guards.
+            </p>
+            <ul class="text-xs text-slate-300 space-y-2 mb-6 font-mono">
+              <li class="flex items-center gap-2"><span class="text-brand-cyan">✓</span> Zero-Lag MT5 Bridge Scripts (.py)</li>
+              <li class="flex items-center gap-2"><span class="text-brand-cyan">✓</span> TradingView JSON Alert Presets</li>
+              <li class="flex items-center gap-2"><span class="text-brand-cyan">✓</span> Full Setup & Configuration Manual (PDF)</li>
+            </ul>
+          </div>
+          <a href="./downloads/LiquiQuant-OS-Complete-Trader-Suite.zip" download class="w-full py-4 rounded-xl text-center text-xs font-bold uppercase tracking-wider text-white bg-dark-800 hover:bg-dark-750 border border-brand-cyan/40 hover:border-brand-cyan shadow-lg transition flex items-center justify-center gap-2 font-mono">
+            <svg class="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>Download Trader Suite (.ZIP ~3MB)</span>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- MODULE 3: VIDEO & SUPPORT -->
+      <div class="p-6 sm:p-8 rounded-3xl bg-dark-950 border border-dark-border grid sm:grid-cols-2 gap-6 items-center">
+        <div>
+          <div class="text-[10px] font-mono font-bold text-brand-gold uppercase tracking-widest mb-1">Direct Assistance</div>
+          <h3 class="text-lg font-bold text-white mb-2">Need White-Glove Installation?</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            Connect directly with our institutional quant support desk on WhatsApp or email for instant MT5 connection assistance or custom broker configuration.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="https://wa.me/919953582388?text=Hi%20LiquiQuant%20Support,%20I%20have%20purchased%20LiquiQuant%20OS%20and%20would%20like%20VIP%20activation%20support." target="_blank" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition font-mono">
+              <span>VIP WhatsApp Desk</span>
+            </a>
+            <a href="mailto:akshsharma.web@gmail.com" class="px-4 py-2.5 rounded-xl bg-dark-900 hover:bg-dark-850 text-slate-300 font-bold text-xs border border-dark-border transition font-mono">
+              Email Support
+            </a>
+          </div>
+        </div>
+        <div class="p-4 rounded-2xl bg-dark-900 border border-dark-border text-center">
+          <div class="text-xs font-mono text-slate-400 mb-2">Setup Walkthrough</div>
+          <a href="https://www.youtube.com/watch?v=KEYyUDcZiDA" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-brand-cyan hover:underline font-mono">
+            <svg class="w-5 h-5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+            <span>Watch 3-Minute Fast-Start Video ↗</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="pt-6 border-t border-dark-border flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 font-mono gap-3">
+      <div>© 2026 LiquiQuant OS. Institutional Quant Trading Terminal. All rights reserved.</div>
+      <a href="./" class="hover:text-white transition">← Return to Storefront</a>
+    </footer>
+
+  </div>
+
+  <script>
+    // STRICT SECURITY GATE:
+    // Only unlocks if a verified razorpay_payment_id or valid gateway token exists in query params
+    const params = new URLSearchParams(window.location.search);
+    const paymentId = params.get('payment_id') || params.get('razorpay_payment_id') || params.get('razorpay_payment_link_id');
+    const source = params.get('source');
+    const tier = params.get('tier');
+
+    const isVerified = (paymentId && (paymentId.startsWith('pay_') || paymentId.startsWith('plink_'))) || (source === 'gumroad_verified');
+
+    if (isVerified) {
+      document.getElementById('unlockedContent').classList.remove('hidden');
+      document.getElementById('unauthorizedCard').classList.add('hidden');
+      document.getElementById('refBadge').innerText = paymentId || 'GUMROAD-VERIFIED';
+      if (tier) document.getElementById('editionBadge').innerText = tier;
+    } else {
+      // DENY ACCESS
+      document.getElementById('unlockedContent').classList.add('hidden');
+      document.getElementById('unauthorizedCard').classList.remove('hidden');
+      document.getElementById('headerStatusBadge').className = 'text-rose-400 font-mono text-xs px-2 py-0.5 rounded bg-rose-500/10 border border-rose-500/30 ml-2';
+      document.getElementById('headerStatusBadge').innerText = 'UNVERIFIED';
+      document.getElementById('statusPulse').className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
+      document.getElementById('statusText').innerHTML = 'SECURITY STATUS: <strong class="text-rose-400">UNAUTHORIZED</strong>';
+    }
+  </script>
+
+</body>
+</html>

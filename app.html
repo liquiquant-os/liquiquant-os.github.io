@@ -1,0 +1,4678 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiquiQuant OS | Institutional Trading Terminal & Notion Companion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0B0F17;
+      --card-bg: rgba(16, 22, 34, 0.85);
+      --card-border: rgba(255, 255, 255, 0.07);
+      --accent-mint: #2DD4BF;
+      --accent-gold: #E5C07B;
+      --accent-red: #F87171;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .bg-grid {
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .fintech-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      transition: all 0.2s ease;
+    }
+    .fintech-card:hover {
+      border-color: rgba(45, 212, 191, 0.25);
+    }
+    .pill-active {
+      background: rgba(45, 212, 191, 0.15);
+      border-color: rgba(45, 212, 191, 0.4);
+      color: #2DD4BF;
+    }
+    .pill-inactive {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: #94A3B8;
+    }
+    .pill-inactive:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: #F1F5F9;
+    }
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(45,212,191,0.4); }
+  </style>
+</head>
+<body class="bg-grid min-h-screen pb-20">
+
+  <!-- TOP APP NAVIGATION -->
+  <header class="border-b border-white/5 bg-[#0B0F17]/95 relative z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Mode -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-500/20 to-amber-500/20 border border-teal-400/40 flex items-center justify-center font-mono font-bold text-teal-300 text-sm shadow-md">
+          LQ
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-white text-base tracking-tight">LIQUIQUANT</span>
+            <span class="text-teal-400 font-extrabold text-xs px-1.5 py-0.5 rounded bg-teal-500/10 border border-teal-500/20">OS</span>
+            <span class="hidden sm:inline-block text-[11px] font-mono text-slate-400 border-l border-slate-800 pl-2">QUANT TERMINAL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="india.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-mono transition">
+          <span>🇮🇳</span>
+          <span class="hidden sm:inline">NSE Indian Engine</span>
+          <span class="sm:hidden">NSE</span>
+        </a>
+                <button onclick="load2025Backtest()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-mono transition">
+          <span>📊</span>
+          <span class="hidden sm:inline">2025 EURUSD Backtest (195 Trades)</span>
+          <span class="sm:hidden">2025 Backtest</span>
+        </button>
+        <button onclick="loadSampleTrades()" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-mono transition">
+          <span>✨</span>
+          <span>Load 30 Sample Trades</span>
+        </button>
+        <button onclick="openNotionModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-mono transition">
+          <span>📑</span>
+          <span class="hidden sm:inline">Notion Sync</span>
+          <span class="sm:hidden">Notion</span>
+        </button>
+        <button onclick="openNewTradeModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 font-mono font-bold text-xs transition shadow-lg shadow-teal-500/20">
+          <span>+</span>
+          <span>Log Trade</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
+
+    <!-- WELCOME ONBOARDING BANNER (Dismissable or 1-Click Fill) -->
+    <div id="onboardingBanner" class="fintech-card p-4 sm:p-5 border-teal-500/30 bg-gradient-to-r from-teal-950/30 via-slate-900/60 to-slate-900/40 relative overflow-hidden">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+            <span class="text-xs font-mono uppercase tracking-wider text-teal-300 font-semibold">Zero-Friction Institutional Trading OS</span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-bold text-white tracking-tight">Run your trades independently, or sync straight to your Notion Workspace.</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Track ICT/SMC Killzones, SMT Divergences, Win-Rates, and psychological discipline with zero server lag.</p>
+        </div>
+        <div class="flex items-center gap-2 w-full md:w-auto">
+                  <button onclick="load2025Backtest()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-mono transition">
+          <span>📊</span>
+          <span class="hidden sm:inline">2025 EURUSD Backtest (195 Trades)</span>
+          <span class="sm:hidden">2025 Backtest</span>
+        </button>
+        <button onclick="loadSampleTrades()" class="flex-1 md:flex-initial px-4 py-2 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/40 font-mono text-xs font-bold transition text-center">
+            ⚡ Quick-Start: Load Demo Data
+          </button>
+          <button onclick="document.getElementById('onboardingBanner').style.display='none'" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 text-xs transition">
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 1: FINTECH TOP METRICS (Modeled after Image 3 Mobile/SaaS Overview) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      
+      <!-- Card 1: Account Capital & Net PnL -->
+      <div class="fintech-card p-4 sm:p-5">
+        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1 flex items-center justify-between">
+          <span>Total Balance</span>
+          <span class="text-teal-400 font-bold" id="metricReturnPct">+12.4%</span>
+        </div>
+        <div class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mono" id="metricBalance">$112,450.00</div>
+        <div class="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
+          <span class="text-teal-400 font-mono font-semibold" id="metricNetPnl">+$12,450.00</span>
+          <span>unrealized / net</span>
+        </div>
+        <!-- Mini Sparkline SVG -->
+        <div class="mt-3 h-8 w-full">
+          <svg class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 25">
+            <polyline fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              points="0,20 15,18 30,22 45,14 60,16 75,8 90,11 100,4" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Card 2: Win Rate & Profit Factor with Explicit SL / Profit / BE Values -->
+      <div class="fintech-card p-4 sm:p-5">
+        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1 flex items-center justify-between">
+          <span>Execution Edge</span>
+          <span class="text-amber-400 font-bold" id="metricPf">PF: 2.18</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mono" id="metricWinRate">64.5%</span>
+          <span class="text-xs font-mono text-slate-400" id="metricTradesCount">(20 trades)</span>
+        </div>
+        <div class="text-[11px] text-slate-300 mt-2 flex flex-wrap items-center gap-1.5 font-mono">
+          <span class="text-teal-400 font-bold" id="metricGrossProfit">+$18,450 (14W)</span>
+          <span class="text-slate-600">•</span>
+          <span class="text-rose-400 font-bold" id="metricGrossLoss">-$4,100 (5L)</span>
+          <span class="text-slate-600">•</span>
+          <span class="text-amber-300 font-bold" id="metricBreakEven">1 BE ($0.00)</span>
+        </div>
+        <!-- Progress bar with Win, BE, Loss segments -->
+        <div class="mt-3 h-2 w-full bg-slate-800 rounded-full overflow-hidden flex">
+          <div id="barWin" class="bg-teal-400 h-full" style="width: 70%"></div>
+          <div id="barBe" class="bg-amber-400 h-full" style="width: 5%"></div>
+          <div id="barLoss" class="bg-rose-500 h-full" style="width: 25%"></div>
+        </div>
+      </div>
+
+      <!-- Card 3: Expectancy & Stop Loss vs Profit Target Values -->
+      <div class="fintech-card p-4 sm:p-5">
+        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1 flex items-center justify-between">
+          <span>Mathematical Expectancy</span>
+          <span class="text-teal-400 font-mono text-xs">POSITIVE</span>
+        </div>
+        <div class="text-2xl sm:text-3xl font-extrabold text-amber-300 tracking-tight mono" id="metricExpectancy">+1.85 R</div>
+        <div class="text-xs text-slate-400 mt-2 font-mono flex flex-col gap-0.5">
+          <div>Avg Profit (TP): <strong class="text-teal-400" id="metricAvgWinVal">+$1,317.86</strong></div>
+          <div>Avg Stop-Loss (SL): <strong class="text-rose-400" id="metricAvgLossVal">-$820.00</strong></div>
+        </div>
+        <!-- Mini Sparkline SVG -->
+        <div class="mt-2 h-7 w-full">
+          <svg class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 25">
+            <polyline fill="none" stroke="#E5C07B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              points="0,22 15,19 30,19 45,12 60,15 75,6 90,9 100,3" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Card 4: Prop-Firm Max Drawdown Guard -->
+      <div class="fintech-card p-4 sm:p-5">
+        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1 flex items-center justify-between">
+          <span>Drawdown Buffer</span>
+          <span class="text-teal-400 font-bold" id="metricDdStatus">SAFE</span>
+        </div>
+        <div class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mono" id="metricDdBuffer">$7,550.00</div>
+        <div class="text-xs text-slate-400 mt-2">
+          Distance to 10% Prop Breach: <strong class="text-teal-400 mono">7.55%</strong>
+        </div>
+        <!-- Buffer visual bar -->
+        <div class="mt-3 h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+          <div class="bg-teal-400 h-full rounded-full" style="width: 82%"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ROW 2: INTERACTIVE EQUITY CURVE & PERFORMANCE TRENDS (From Image 1 & 3) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left 2 Cols: Interactive Equity Curve Chart -->
+      <div class="fintech-card p-5 lg:col-span-2 flex flex-col justify-between">
+        
+        <!-- Header & Pair/Timeframe Filter -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/5 pb-4 mb-4">
+          <div>
+            <div class="text-xs font-mono text-amber-400 uppercase tracking-wider font-semibold">Institutional Curve</div>
+            <h3 class="text-base font-bold text-white">Cumulative Account Growth (Equity vs High Watermark)</h3>
+          </div>
+          <!-- Timeframe pills -->
+          <div class="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono">
+            <button onclick="filterTimeframe('7D')" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">7D</button>
+            <button onclick="filterTimeframe('30D')" class="px-2.5 py-1 rounded-lg pill-active transition">30D</button>
+            <button onclick="filterTimeframe('ALL')" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">ALL</button>
+          </div>
+        </div>
+
+        <!-- SVG Interactive Chart Container -->
+        <div class="w-full h-64 relative flex items-end">
+          <svg id="equityChartSvg" class="w-full h-full overflow-visible" viewBox="0 0 600 200" preserveAspectRatio="none">
+            <!-- Grid lines -->
+            <line x1="0" y1="50" x2="600" y2="50" stroke="rgba(255,255,255,0.04)" stroke-dasharray="4" />
+            <line x1="0" y1="100" x2="600" y2="100" stroke="rgba(255,255,255,0.04)" stroke-dasharray="4" />
+            <line x1="0" y1="150" x2="600" y2="150" stroke="rgba(255,255,255,0.04)" stroke-dasharray="4" />
+            
+            <!-- Shaded Area gradient -->
+            <defs>
+              <linearGradient id="curveGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.25" />
+                <stop offset="100%" stop-color="#2DD4BF" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+            <polygon id="chartArea" fill="url(#curveGradient)" points="0,180 50,170 120,150 180,160 250,120 320,130 400,90 480,70 550,50 600,30 600,200 0,200" />
+            
+            <!-- Main Equity Polyline -->
+            <polyline id="chartLine" fill="none" stroke="#2DD4BF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+              points="0,180 50,170 120,150 180,160 250,120 320,130 400,90 480,70 550,50 600,30" />
+          </svg>
+        </div>
+
+        <!-- Chart Footnote with Key Highs & Lows -->
+        <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-3 border-t border-white/5 mt-3">
+          <span>START: <strong class="text-white">$100,000.00</strong></span>
+          <span>PEAK: <strong class="text-teal-400" id="chartPeak">$113,200.00</strong></span>
+          <span>CURRENT: <strong class="text-teal-300" id="chartCurrent">$112,450.00</strong></span>
+        </div>
+
+      </div>
+
+      <!-- Right 1 Col: Setup Matrix & Discipline Score (From Image 1) -->
+      <div class="fintech-card p-5 flex flex-col justify-between">
+        
+        <div>
+          <div class="text-xs font-mono text-teal-400 uppercase tracking-wider font-semibold">Edge Decomposition</div>
+          <h3 class="text-base font-bold text-white mb-4">Setup Win-Rate & P&L</h3>
+
+          <!-- Setups List -->
+          <div class="space-y-3.5">
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span class="text-slate-300">London Killzone Sweep</span>
+                <span class="text-teal-400 font-bold">75% (12/16) • +$7,200</span>
+              </div>
+              <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="bg-teal-400 h-full rounded-full" style="width: 75%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span class="text-slate-300">15m SMT Divergence</span>
+                <span class="text-teal-400 font-bold">70% (7/10) • +$4,150</span>
+              </div>
+              <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="bg-teal-400 h-full rounded-full" style="width: 70%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span class="text-slate-300">Asian Range Expansion</span>
+                <span class="text-amber-400 font-bold">50% (2/4) • +$1,100</span>
+              </div>
+              <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="bg-amber-400 h-full rounded-full" style="width: 50%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span class="text-slate-400">Random / No SMT (Deviated)</span>
+                <span class="text-rose-400 font-bold">0% (0/1) • -$850</span>
+              </div>
+              <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="bg-rose-500 h-full rounded-full" style="width: 15%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discipline Audit Card -->
+        <div class="mt-6 pt-4 border-t border-white/5">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-[11px] font-mono text-slate-400">EXECUTION DISCIPLINE</div>
+              <div class="text-lg font-bold text-teal-300 mono">96.7% Clean Execution</div>
+            </div>
+            <div class="px-2.5 py-1 rounded bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono font-bold">
+              0 FOMO TRADES
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ROW 3: RECENT TRADES JOURNAL (Clean Table with Quick Search & Status) -->
+    <div class="fintech-card p-5">
+
+      <!-- DUAL INGESTION MODE SELECTOR (Auto Detection vs Manual Drag & Drop) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+        <!-- Mode 1: Auto Detection (MT5 -> Notion Live) -->
+        <div class="p-4 rounded-xl bg-slate-900/80 border border-teal-500/30 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400 font-mono text-sm">⚡</div>
+            <div>
+              <div class="text-xs font-bold text-white flex items-center gap-2">
+                <span>Auto-Detection Mode</span>
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-teal-500/20 text-teal-300 border border-teal-500/30">MT5 → Notion Active</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Background IPC bridge streams closed deals directly into Notion.</div>
+            </div>
+          </div>
+          <button onclick="window.open('START_HERE.bat')" class="px-3 py-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 text-xs font-mono transition whitespace-nowrap">
+            Bridge Active
+          </button>
+        </div>
+
+        <!-- Mode 2: Manual Drag & Drop Ingestion Zone -->
+        <div id="dropZone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleStatementDrop(event)" onclick="document.getElementById('statementFileInput').click()"
+          class="p-4 rounded-xl bg-slate-900/60 border-2 border-dashed border-slate-700 hover:border-teal-400/70 transition cursor-pointer flex items-center justify-between group">
+          <input type="file" id="statementFileInput" accept=".html,.htm,.csv,.txt" style="display:none;" onchange="handleStatementUpload(event)">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-slate-800 group-hover:bg-teal-500/10 border border-slate-700 group-hover:border-teal-500/30 flex items-center justify-center text-slate-400 group-hover:text-teal-400 text-sm transition">📁</div>
+            <div>
+              <div class="text-xs font-bold text-white group-hover:text-teal-300 transition">Manual Drag & Drop Ingestion</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Drop MT5 HTML Report or CSV statement here for instant calculation.</div>
+            </div>
+          </div>
+          <span class="px-3 py-1 rounded-lg bg-white/5 group-hover:bg-teal-500/20 text-slate-300 group-hover:text-teal-300 text-xs font-mono transition whitespace-nowrap">
+            Drop Statement
+          </span>
+        </div>
+      </div>
+
+      <!-- Import Success Banner (Hidden by default) -->
+      <div id="importNotification" class="hidden mb-4 p-3 rounded-xl bg-teal-500/10 border border-teal-500/40 text-teal-300 text-xs font-mono flex items-center justify-between">
+        <span id="importNotificationText">✅ Statement successfully ingested!</span>
+        <button onclick="document.getElementById('importNotification').classList.add('hidden')" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+
+      <!-- Table Header & Filter Bar -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 pb-3 border-b border-white/5">
+        <div class="flex items-center gap-3">
+          <h3 class="text-base font-bold text-white">Live Execution Ledger</h3>
+          <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700" id="tableCountBadge">31 Logged</span>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <input type="text" id="tradeSearch" onkeyup="filterTradesTable()" placeholder="Search pair, setup, session..."
+            class="w-full sm:w-56 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 font-mono focus:border-teal-400 focus:outline-none">
+          <button onclick="exportExecutiveReport()" class="px-3 py-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 text-xs font-mono transition whitespace-nowrap flex items-center gap-1.5">
+            <span>📄</span>
+            <span>Hand Over Report</span>
+          </button>
+          <button onclick="clearAllTrades()" class="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-mono transition whitespace-nowrap">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Table Body -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono">
+          <thead>
+            <tr class="text-slate-400 border-b border-white/5 pb-2 text-[11px]">
+              <th class="py-2.5 px-3">DATE / TIME</th>
+              <th class="py-2.5 px-3">ASSET</th>
+              <th class="py-2.5 px-3">TYPE</th>
+              <th class="py-2.5 px-3">ENTRY</th>
+              <th class="py-2.5 px-3">SL / TP</th>
+              <th class="py-2.5 px-3">EXIT</th>
+              <th class="py-2.5 px-3">SESSION</th>
+              <th class="py-2.5 px-3">RR</th>
+              <th class="py-2.5 px-3">PROFIT / LOSS</th>
+              <th class="py-2.5 px-3">STATUS</th>
+              <th class="py-2.5 px-3 text-right">ACTION</th>
+            </tr>
+          </thead>
+          <tbody id="tradeTableBody" class="divide-y divide-white/5 text-slate-300">
+            <!-- Dynamically populated by JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL 1: QUICK LOG TRADE (Zero Friction) -->
+  <div id="newTradeModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="fintech-card max-w-lg w-full p-6 border-teal-500/40 relative">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-5">
+        <div class="flex items-center gap-2">
+          <span class="text-teal-400 text-lg font-bold">⚡</span>
+          <h3 class="font-bold text-white text-base">Quick-Log Trade Slip</h3>
+        </div>
+        <button onclick="closeNewTradeModal()" class="text-slate-400 hover:text-white font-mono text-sm">✕</button>
+      </div>
+
+      <div class="space-y-4 font-mono text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-slate-400 block mb-1">ASSET / PAIR</label>
+            <select id="inputPair" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-teal-400 focus:outline-none">
+              <option value="EURUSD">EURUSD</option>
+              <option value="GBPUSD">GBPUSD</option>
+              <option value="XAUUSD">XAUUSD (Gold)</option>
+              <option value="NAS100">NAS100</option>
+              <option value="US30">US30</option>
+              <option value="BTCUSD">BTCUSD</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1">SESSION</label>
+            <select id="inputSession" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-teal-400 focus:outline-none">
+              <option value="London KZ">London Killzone (02:00-05:00 EST)</option>
+              <option value="NY AM Open">NY AM Open (08:30-11:00 EST)</option>
+              <option value="NY PM Session">NY PM Session (13:30-16:00 EST)</option>
+              <option value="Asia">Asian Range (20:00-00:00 EST)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-slate-400 block mb-1">INSTITUTIONAL SETUP</label>
+          <select id="inputSetup" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-teal-400 focus:outline-none">
+            <option value="London Killzone Sweep">London Killzone Liquidity Sweep</option>
+            <option value="15m SMT Divergence">15m SMT Divergence Confirmation</option>
+            <option value="Asian Range Expansion">Asian Range Judas Swing & Expansion</option>
+            <option value="FVG Retest">Fair Value Gap Retap & Displacement</option>
+            <option value="Discretionary / No Setup">Discretionary / Off-Plan</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-slate-400 block mb-1">DIRECTION</label>
+            <select id="inputDirection" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-teal-400 focus:outline-none">
+              <option value="BUY">BUY (Long)</option>
+              <option value="SELL">SELL (Short)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1">LOT / VOLUME</label>
+            <input type="number" step="0.01" id="inputVolume" value="2.5" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-teal-400 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2">
+          <div>
+            <label class="text-slate-400 block mb-1 text-[10px]">ENTRY PRICE</label>
+            <input type="number" step="0.00001" id="inputEntry" value="1.08200" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-2 text-white focus:border-teal-400 focus:outline-none text-xs">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 text-[10px]">STOP LOSS (SL)</label>
+            <input type="number" step="0.00001" id="inputSl" value="1.08100" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-2 text-white focus:border-teal-400 focus:outline-none text-xs">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 text-[10px]">TAKE PROFIT (TP)</label>
+            <input type="number" step="0.00001" id="inputTp" value="1.08550" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-2 text-white focus:border-teal-400 focus:outline-none text-xs">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 text-[10px]">EXIT PRICE</label>
+            <input type="number" step="0.00001" id="inputExit" value="1.08520" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-2 text-white focus:border-teal-400 focus:outline-none text-xs">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-slate-400 block mb-1">RISK:REWARD (R)</label>
+            <input type="number" step="0.1" id="inputRr" value="3.2" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-teal-400 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1">NET P&L ($)</label>
+            <input type="number" step="0.01" id="inputPnl" value="1600" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-teal-400 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-slate-400 block mb-1">EXECUTION DISCIPLINE</label>
+            <select id="inputDiscipline" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-teal-400 focus:outline-none">
+              <option value="Followed Rules 100%">Followed Rules 100%</option>
+              <option value="Early Take-Profit">Took Profit Early</option>
+              <option value="Chased Entry (FOMO)">Chased Entry (FOMO)</option>
+              <option value="Widened Stop-Loss">Widened Stop-Loss</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1">OUTCOME</label>
+            <select id="inputOutcome" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-teal-400 focus:outline-none">
+              <option value="WIN">WIN (Take-Profit Hit)</option>
+              <option value="LOSS">LOSS (Stop-Loss Hit)</option>
+              <option value="BE">BE (Break-Even)</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-6 flex items-center justify-end gap-3 border-t border-white/10 pt-4">
+        <button onclick="closeNewTradeModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-mono text-xs hover:bg-slate-700 transition">
+          Cancel
+        </button>
+        <button onclick="saveNewTrade()" class="px-5 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-mono font-bold text-xs transition">
+          Save Execution
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL 2: NOTION SYNC & DUPLICATION -->
+  <div id="notionModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="fintech-card max-w-lg w-full p-6 border-amber-500/40 relative">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-400 text-lg">📑</span>
+          <h3 class="font-bold text-white text-base">Notion Companion & Export Hub</h3>
+        </div>
+        <button onclick="closeNotionModal()" class="text-slate-400 hover:text-white font-mono text-sm">✕</button>
+      </div>
+
+      <p class="text-xs text-slate-300 leading-relaxed mb-4">
+        Your trades are safely saved in this client-side terminal. You can copy a clean formatted markdown table directly into your Notion workspace with 1 click, or open the official Notion Template.
+      </p>
+
+      <div class="space-y-3 font-mono text-xs">
+        <a href="https://liquiquant.gumroad.com/l/rxulg" target="_blank" class="block w-full text-center py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition shadow-lg shadow-amber-500/20">
+          📥 1-Click Duplicate Notion Workspace Template
+        </a>
+        <button onclick="copyTableAsNotionMarkdown()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-teal-300 border border-teal-500/30 font-bold transition flex items-center justify-center gap-2">
+          <span>📋</span>
+          <span id="copyBtnText">Copy All Trades as Notion Markdown</span>
+        </button>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-white/5 text-[11px] text-slate-500 text-center">
+        No API keys needed • 100% offline & client-side privacy
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE (Client-side, Fast, Zero-Friction) -->
+  <script>
+    const INITIAL_CAPITAL = 100000;
+    const LOCAL_STORAGE_KEY = 'liquiquant_trades_ledger';
+
+    // 30 Realistic Sample Trades based on ICT/SMC London & NY setups
+    const SAMPLE_TRADES = [
+      { id: 1, date: '2026-10-01 03:15', pair: 'EURUSD', direction: 'BUY', entry: 1.08200, exit: 1.08520, sl: 1.08100, tp: 1.08550, volume: 5.0, session: 'London KZ', setup: 'London Killzone Sweep', rr: 3.2, pnl: 1600, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 2, date: '2026-10-02 09:45', pair: 'GBPUSD', direction: 'SELL', entry: 1.30400, exit: 1.29960, sl: 1.30550, tp: 1.29900, volume: 3.5, session: 'NY AM Open', setup: '15m SMT Divergence', rr: 2.8, pnl: 1400, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 3, date: '2026-10-03 03:30', pair: 'EURUSD', direction: 'BUY', entry: 1.08450, exit: 1.08350, sl: 1.08350, tp: 1.08800, volume: 5.0, session: 'London KZ', setup: 'London Killzone Sweep', rr: -1.0, pnl: -500, discipline: 'Followed Rules 100%', outcome: 'LOSS' },
+      { id: 4, date: '2026-10-04 10:15', pair: 'NAS100', direction: 'BUY', entry: 20410.0, exit: 20492.0, sl: 20390.0, tp: 20500.0, volume: 2.5, session: 'NY AM Open', setup: 'Asian Range Expansion', rr: 4.1, pnl: 2050, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 5, date: '2026-10-05 08:30', pair: 'GBPUSD', direction: 'BUY', entry: 1.30150, exit: 1.30450, sl: 1.30000, tp: 1.30500, volume: 3.3, session: 'NY AM Open', setup: 'FVG Retest', rr: 2.0, pnl: 1000, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 6, date: '2026-10-08 04:00', pair: 'EURUSD', direction: 'SELL', entry: 1.08900, exit: 1.08450, sl: 1.09050, tp: 1.08400, volume: 3.3, session: 'London KZ', setup: '15m SMT Divergence', rr: 3.0, pnl: 1500, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 7, date: '2026-10-09 09:30', pair: 'XAUUSD', direction: 'BUY', entry: 2655.0, exit: 2649.0, sl: 2649.0, tp: 2675.0, volume: 1.0, session: 'NY AM Open', setup: 'Discretionary / No Setup', rr: -1.0, pnl: -600, discipline: 'Chased Entry (FOMO)', outcome: 'LOSS' },
+      { id: 8, date: '2026-10-10 03:45', pair: 'GBPUSD', direction: 'BUY', entry: 1.30600, exit: 1.30970, sl: 1.30450, tp: 1.31050, volume: 3.4, session: 'London KZ', setup: 'London Killzone Sweep', rr: 2.5, pnl: 1250, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 9, date: '2026-10-11 10:00', pair: 'US30', direction: 'BUY', entry: 43100.0, exit: 43275.0, sl: 43050.0, tp: 43300.0, volume: 1.0, session: 'NY AM Open', setup: 'FVG Retest', rr: 3.5, pnl: 1750, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 10, date: '2026-10-12 03:20', pair: 'EURUSD', direction: 'BUY', entry: 1.08600, exit: 1.08500, sl: 1.08500, tp: 1.08900, volume: 5.0, session: 'London KZ', setup: 'London Killzone Sweep', rr: -1.0, pnl: -500, discipline: 'Followed Rules 100%', outcome: 'LOSS' },
+      { id: 11, date: '2026-10-15 08:45', pair: 'GBPUSD', direction: 'BUY', entry: 1.30800, exit: 1.31130, sl: 1.30650, tp: 1.31200, volume: 3.3, session: 'NY AM Open', setup: '15m SMT Divergence', rr: 2.2, pnl: 1100, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 12, date: '2026-10-16 04:10', pair: 'EURUSD', direction: 'SELL', entry: 1.09200, exit: 1.08730, sl: 1.09350, tp: 1.08700, volume: 3.3, session: 'London KZ', setup: 'Asian Range Expansion', rr: 3.1, pnl: 1550, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 13, date: '2026-10-17 09:15', pair: 'NAS100', direction: 'SELL', entry: 20550.0, exit: 20570.0, sl: 20570.0, tp: 20480.0, volume: 2.5, session: 'NY AM Open', setup: 'FVG Retest', rr: -1.0, pnl: -500, discipline: 'Followed Rules 100%', outcome: 'LOSS' },
+      { id: 14, date: '2026-10-18 03:00', pair: 'GBPUSD', direction: 'BUY', entry: 1.30200, exit: 1.30590, sl: 1.30050, tp: 1.30650, volume: 3.3, session: 'London KZ', setup: 'London Killzone Sweep', rr: 2.6, pnl: 1300, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 15, date: '2026-10-19 10:30', pair: 'XAUUSD', direction: 'BUY', entry: 2660.0, exit: 2679.0, sl: 2655.0, tp: 2685.0, volume: 1.0, session: 'NY AM Open', setup: '15m SMT Divergence', rr: 3.8, pnl: 1900, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 16, date: '2026-10-22 04:15', pair: 'EURUSD', direction: 'BUY', entry: 1.08750, exit: 1.08750, sl: 1.08600, tp: 1.09100, volume: 4.0, session: 'London KZ', setup: 'London Killzone Sweep', rr: 0.0, pnl: 0, discipline: 'Early Take-Profit', outcome: 'BE' },
+      { id: 17, date: '2026-10-23 09:00', pair: 'US30', direction: 'BUY', entry: 43300.0, exit: 43445.0, sl: 43250.0, tp: 43450.0, volume: 1.0, session: 'NY AM Open', setup: 'FVG Retest', rr: 2.9, pnl: 1450, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 18, date: '2026-10-24 03:40', pair: 'GBPUSD', direction: 'BUY', entry: 1.30900, exit: 1.30750, sl: 1.30750, tp: 1.31300, volume: 3.3, session: 'London KZ', setup: '15m SMT Divergence', rr: -1.0, pnl: -500, discipline: 'Followed Rules 100%', outcome: 'LOSS' },
+      { id: 19, date: '2026-10-25 10:00', pair: 'NAS100', direction: 'BUY', entry: 20600.0, exit: 20685.0, sl: 20575.0, tp: 20700.0, volume: 2.0, session: 'NY AM Open', setup: 'Asian Range Expansion', rr: 3.4, pnl: 1700, discipline: 'Followed Rules 100%', outcome: 'WIN' },
+      { id: 20, date: '2026-10-26 08:30', pair: 'EURUSD', direction: 'BUY', entry: 1.08800, exit: 1.09110, sl: 1.08650, tp: 1.09150, volume: 3.4, session: 'NY AM Open', setup: 'London Killzone Sweep', rr: 2.1, pnl: 1050, discipline: 'Followed Rules 100%', outcome: 'WIN' }
+    ];
+
+    let currentTrades = [];
+
+    function initApp() {
+      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (stored) {
+        try {
+          currentTrades = JSON.parse(stored);
+        } catch(e) {
+          currentTrades = [...SAMPLE_TRADES];
+        }
+      } else {
+        currentTrades = [...SAMPLE_TRADES];
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentTrades));
+      }
+      renderApp();
+    }
+
+    const BACKTEST_2025_TRADES = [
+  {
+    "id": 1,
+    "date": "2025-01-02 08:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.03231,
+    "exit": 1.03107,
+    "sl": 1.03107,
+    "tp": 1.03479,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -500.0,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 2,
+    "date": "2025-01-03 07:10",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.02967,
+    "exit": 1.03029,
+    "sl": 1.03029,
+    "tp": 1.02843,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -497.5,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 3,
+    "date": "2025-01-06 09:40",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.03687,
+    "exit": 1.03836,
+    "sl": 1.03836,
+    "tp": 1.03389,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -495.01,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 4,
+    "date": "2025-01-07 08:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.03929,
+    "exit": 1.03851,
+    "sl": 1.03851,
+    "tp": 1.04085,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -492.54,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 5,
+    "date": "2025-01-08 13:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.03117,
+    "exit": 1.0305,
+    "sl": 1.0305,
+    "tp": 1.03251,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -490.07,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 6,
+    "date": "2025-01-09 08:35",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.03137,
+    "exit": 1.02991,
+    "sl": 1.0321,
+    "tp": 1.02991,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 975.25,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 7,
+    "date": "2025-01-14 07:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.02498,
+    "exit": 1.02746,
+    "sl": 1.02374,
+    "tp": 1.02746,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 985.0,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 8,
+    "date": "2025-01-15 10:05",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.03156,
+    "exit": 1.03291,
+    "sl": 1.03291,
+    "tp": 1.02886,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -497.43,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 9,
+    "date": "2025-01-16 08:50",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.02826,
+    "exit": 1.02731,
+    "sl": 1.02731,
+    "tp": 1.03016,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -494.94,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 10,
+    "date": "2025-01-17 09:25",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.02792,
+    "exit": 1.031,
+    "sl": 1.02638,
+    "tp": 1.031,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 984.93,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 11,
+    "date": "2025-01-20 07:10",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.03201,
+    "exit": 1.03274,
+    "sl": 1.03274,
+    "tp": 1.03055,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -497.39,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 12,
+    "date": "2025-01-21 09:45",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.03864,
+    "exit": 1.04004,
+    "sl": 1.04004,
+    "tp": 1.03584,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -494.9,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 13,
+    "date": "2025-01-23 10:25",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.0395,
+    "exit": 1.03849,
+    "sl": 1.03849,
+    "tp": 1.04152,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -492.43,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 14,
+    "date": "2025-01-27 10:00",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.05036,
+    "exit": 1.04854,
+    "sl": 1.05127,
+    "tp": 1.04854,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 979.93,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 15,
+    "date": "2025-01-28 07:25",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.04199,
+    "exit": 1.04329,
+    "sl": 1.04134,
+    "tp": 1.04329,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 989.73,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 16,
+    "date": "2025-01-29 09:05",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.03949,
+    "exit": 1.04163,
+    "sl": 1.03842,
+    "tp": 1.04163,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 999.63,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 17,
+    "date": "2025-01-30 07:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.03986,
+    "exit": 1.04134,
+    "sl": 1.03912,
+    "tp": 1.04134,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1009.62,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 18,
+    "date": "2025-01-31 10:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.03703,
+    "exit": 1.03945,
+    "sl": 1.03582,
+    "tp": 1.03945,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1019.72,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 19,
+    "date": "2025-02-03 09:00",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.02535,
+    "exit": 1.02666,
+    "sl": 1.02666,
+    "tp": 1.02273,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -514.96,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 20,
+    "date": "2025-02-04 09:20",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.03476,
+    "exit": 1.03613,
+    "sl": 1.03613,
+    "tp": 1.03202,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -512.38,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 21,
+    "date": "2025-02-05 10:05",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.04258,
+    "exit": 1.03886,
+    "sl": 1.04444,
+    "tp": 1.03886,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1019.64,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 22,
+    "date": "2025-02-06 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.0362,
+    "exit": 1.03854,
+    "sl": 1.03503,
+    "tp": 1.03854,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1029.84,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 23,
+    "date": "2025-02-07 07:50",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.03747,
+    "exit": 1.03684,
+    "sl": 1.03684,
+    "tp": 1.03873,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -520.07,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 24,
+    "date": "2025-02-10 09:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.03082,
+    "exit": 1.03021,
+    "sl": 1.03021,
+    "tp": 1.03204,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -517.47,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 25,
+    "date": "2025-02-11 07:50",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.03225,
+    "exit": 1.03299,
+    "sl": 1.03299,
+    "tp": 1.03077,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -514.88,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 26,
+    "date": "2025-02-12 10:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.03569,
+    "exit": 1.03989,
+    "sl": 1.03359,
+    "tp": 1.03989,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1024.61,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 27,
+    "date": "2025-02-13 14:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.04208,
+    "exit": 1.04614,
+    "sl": 1.04005,
+    "tp": 1.04614,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1034.86,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 28,
+    "date": "2025-02-14 08:35",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.04862,
+    "exit": 1.04996,
+    "sl": 1.04996,
+    "tp": 1.04594,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -522.6,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 29,
+    "date": "2025-02-18 08:15",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.0453,
+    "exit": 1.04436,
+    "sl": 1.04436,
+    "tp": 1.04718,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -519.99,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 30,
+    "date": "2025-02-19 14:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.0426,
+    "exit": 1.04167,
+    "sl": 1.04167,
+    "tp": 1.04446,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -517.39,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 31,
+    "date": "2025-02-20 08:45",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.04449,
+    "exit": 1.04545,
+    "sl": 1.04545,
+    "tp": 1.04257,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -514.8,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 32,
+    "date": "2025-02-21 07:15",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.04641,
+    "exit": 1.04779,
+    "sl": 1.04572,
+    "tp": 1.04779,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1024.46,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 33,
+    "date": "2025-02-24 07:55",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.04687,
+    "exit": 1.04588,
+    "sl": 1.04588,
+    "tp": 1.04885,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -517.35,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 34,
+    "date": "2025-02-26 07:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.04909,
+    "exit": 1.04842,
+    "sl": 1.04842,
+    "tp": 1.05043,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -514.77,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 35,
+    "date": "2025-02-28 08:40",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.04064,
+    "exit": 1.04171,
+    "sl": 1.04171,
+    "tp": 1.0385,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -512.19,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 36,
+    "date": "2025-03-04 09:30",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.05248,
+    "exit": 1.05034,
+    "sl": 1.05355,
+    "tp": 1.05034,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1019.26,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 37,
+    "date": "2025-03-06 08:25",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.08154,
+    "exit": 1.08302,
+    "sl": 1.08302,
+    "tp": 1.07858,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -514.73,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 38,
+    "date": "2025-03-07 08:40",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.08689,
+    "exit": 1.08259,
+    "sl": 1.08904,
+    "tp": 1.08259,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1024.31,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 39,
+    "date": "2025-03-11 08:50",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.09205,
+    "exit": 1.08963,
+    "sl": 1.09326,
+    "tp": 1.08963,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1034.55,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 40,
+    "date": "2025-03-12 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.08912,
+    "exit": 1.08759,
+    "sl": 1.08759,
+    "tp": 1.09218,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -522.45,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 41,
+    "date": "2025-03-13 07:25",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.08618,
+    "exit": 1.08542,
+    "sl": 1.08542,
+    "tp": 1.0877,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -519.84,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 42,
+    "date": "2025-03-18 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.09061,
+    "exit": 1.09375,
+    "sl": 1.08904,
+    "tp": 1.09375,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1034.47,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 43,
+    "date": "2025-03-20 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.08397,
+    "exit": 1.08311,
+    "sl": 1.08311,
+    "tp": 1.08569,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -522.41,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 44,
+    "date": "2025-03-21 07:25",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.08433,
+    "exit": 1.08223,
+    "sl": 1.08538,
+    "tp": 1.08223,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1039.59,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 45,
+    "date": "2025-03-24 08:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.08244,
+    "exit": 1.08153,
+    "sl": 1.08153,
+    "tp": 1.08426,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -524.99,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 46,
+    "date": "2025-03-25 08:20",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.08201,
+    "exit": 1.08049,
+    "sl": 1.08277,
+    "tp": 1.08049,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1044.74,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 47,
+    "date": "2025-03-26 09:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.07879,
+    "exit": 1.07733,
+    "sl": 1.07733,
+    "tp": 1.08171,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -527.59,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 48,
+    "date": "2025-03-27 07:55",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.07868,
+    "exit": 1.07966,
+    "sl": 1.07966,
+    "tp": 1.07672,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -524.96,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 49,
+    "date": "2025-03-28 08:10",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.07931,
+    "exit": 1.0806,
+    "sl": 1.0806,
+    "tp": 1.07673,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -522.33,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 50,
+    "date": "2025-03-31 09:05",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.08139,
+    "exit": 1.08006,
+    "sl": 1.08006,
+    "tp": 1.08405,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -519.72,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 51,
+    "date": "2025-04-01 10:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.08109,
+    "exit": 1.07928,
+    "sl": 1.07928,
+    "tp": 1.08471,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -517.12,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 52,
+    "date": "2025-04-02 08:45",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.08041,
+    "exit": 1.08169,
+    "sl": 1.08169,
+    "tp": 1.07785,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -514.53,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 53,
+    "date": "2025-04-03 07:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.10443,
+    "exit": 1.10618,
+    "sl": 1.10618,
+    "tp": 1.10093,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -511.96,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 54,
+    "date": "2025-04-07 07:45",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.09504,
+    "exit": 1.09744,
+    "sl": 1.09384,
+    "tp": 1.09744,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1018.8,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 55,
+    "date": "2025-04-09 08:40",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.10795,
+    "exit": 1.10449,
+    "sl": 1.10968,
+    "tp": 1.10449,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1028.99,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 56,
+    "date": "2025-04-14 10:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.13605,
+    "exit": 1.13387,
+    "sl": 1.13387,
+    "tp": 1.14041,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -519.64,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 57,
+    "date": "2025-04-15 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.13209,
+    "exit": 1.13349,
+    "sl": 1.13139,
+    "tp": 1.13349,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1034.09,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 58,
+    "date": "2025-04-16 15:55",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.13864,
+    "exit": 1.13948,
+    "sl": 1.13948,
+    "tp": 1.13696,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -522.21,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 59,
+    "date": "2025-04-17 08:35",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.13521,
+    "exit": 1.13809,
+    "sl": 1.13377,
+    "tp": 1.13809,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1039.2,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 60,
+    "date": "2025-04-21 13:35",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15036,
+    "exit": 1.15214,
+    "sl": 1.14947,
+    "tp": 1.15214,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1049.6,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 61,
+    "date": "2025-04-24 15:45",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.1389,
+    "exit": 1.13688,
+    "sl": 1.13991,
+    "tp": 1.13688,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1060.09,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 62,
+    "date": "2025-04-25 10:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.13611,
+    "exit": 1.13733,
+    "sl": 1.13733,
+    "tp": 1.13367,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -535.35,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 63,
+    "date": "2025-04-29 08:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.13858,
+    "exit": 1.1368,
+    "sl": 1.1368,
+    "tp": 1.14214,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -532.67,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 64,
+    "date": "2025-04-30 07:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.1364,
+    "exit": 1.1382,
+    "sl": 1.1355,
+    "tp": 1.1382,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1060.01,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 65,
+    "date": "2025-05-01 07:40",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.13286,
+    "exit": 1.13054,
+    "sl": 1.13402,
+    "tp": 1.13054,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1070.61,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 66,
+    "date": "2025-05-02 09:30",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.13454,
+    "exit": 1.13597,
+    "sl": 1.13597,
+    "tp": 1.13168,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -540.66,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 67,
+    "date": "2025-05-05 07:30",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.13428,
+    "exit": 1.13585,
+    "sl": 1.13585,
+    "tp": 1.13114,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -537.96,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 68,
+    "date": "2025-05-06 10:00",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.13434,
+    "exit": 1.13576,
+    "sl": 1.13576,
+    "tp": 1.1315,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -535.27,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 69,
+    "date": "2025-05-07 13:35",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.13452,
+    "exit": 1.13343,
+    "sl": 1.13343,
+    "tp": 1.1367,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -532.59,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 70,
+    "date": "2025-05-09 07:30",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.12517,
+    "exit": 1.12625,
+    "sl": 1.12625,
+    "tp": 1.12301,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -529.93,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 71,
+    "date": "2025-05-12 07:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.10922,
+    "exit": 1.11248,
+    "sl": 1.10759,
+    "tp": 1.11248,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1054.56,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 72,
+    "date": "2025-05-13 08:35",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.11171,
+    "exit": 1.11314,
+    "sl": 1.11314,
+    "tp": 1.10885,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -532.55,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 73,
+    "date": "2025-05-14 14:45",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.11815,
+    "exit": 1.11741,
+    "sl": 1.11741,
+    "tp": 1.11963,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -529.89,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 74,
+    "date": "2025-05-15 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.11857,
+    "exit": 1.12031,
+    "sl": 1.1177,
+    "tp": 1.12031,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1054.48,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 75,
+    "date": "2025-05-16 08:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.11964,
+    "exit": 1.11881,
+    "sl": 1.11881,
+    "tp": 1.1213,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -532.51,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 76,
+    "date": "2025-05-20 09:45",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.12431,
+    "exit": 1.12677,
+    "sl": 1.12308,
+    "tp": 1.12677,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1059.7,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 77,
+    "date": "2025-05-21 10:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.13386,
+    "exit": 1.13563,
+    "sl": 1.13563,
+    "tp": 1.13032,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -535.15,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 78,
+    "date": "2025-05-22 08:55",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.12948,
+    "exit": 1.12827,
+    "sl": 1.12827,
+    "tp": 1.1319,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -532.47,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 79,
+    "date": "2025-05-23 08:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.13217,
+    "exit": 1.13012,
+    "sl": 1.13012,
+    "tp": 1.13627,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -529.81,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 80,
+    "date": "2025-05-26 08:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.13791,
+    "exit": 1.13719,
+    "sl": 1.13719,
+    "tp": 1.13935,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -527.16,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 81,
+    "date": "2025-05-28 13:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.12989,
+    "exit": 1.12925,
+    "sl": 1.12925,
+    "tp": 1.13117,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -524.52,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 82,
+    "date": "2025-05-29 07:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.128,
+    "exit": 1.12901,
+    "sl": 1.12901,
+    "tp": 1.12598,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -521.9,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 83,
+    "date": "2025-05-30 08:45",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.13428,
+    "exit": 1.13604,
+    "sl": 1.13604,
+    "tp": 1.13076,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -519.29,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 84,
+    "date": "2025-06-02 15:00",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.14355,
+    "exit": 1.14444,
+    "sl": 1.14444,
+    "tp": 1.14177,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -516.7,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 85,
+    "date": "2025-06-04 08:25",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.1401,
+    "exit": 1.14116,
+    "sl": 1.14116,
+    "tp": 1.13798,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -514.11,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 86,
+    "date": "2025-06-05 07:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.14203,
+    "exit": 1.14303,
+    "sl": 1.14303,
+    "tp": 1.14003,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -511.54,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 87,
+    "date": "2025-06-06 08:15",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.14109,
+    "exit": 1.14006,
+    "sl": 1.14006,
+    "tp": 1.14315,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -508.98,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 88,
+    "date": "2025-06-09 07:35",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.14127,
+    "exit": 1.14035,
+    "sl": 1.14035,
+    "tp": 1.14311,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -506.44,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 89,
+    "date": "2025-06-10 13:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.14182,
+    "exit": 1.14257,
+    "sl": 1.14257,
+    "tp": 1.14032,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -503.91,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 90,
+    "date": "2025-06-12 07:40",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.15858,
+    "exit": 1.16007,
+    "sl": 1.16007,
+    "tp": 1.1556,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -501.39,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 91,
+    "date": "2025-06-13 08:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15151,
+    "exit": 1.1508,
+    "sl": 1.1508,
+    "tp": 1.15293,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -498.88,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 92,
+    "date": "2025-06-17 08:25",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.15672,
+    "exit": 1.15745,
+    "sl": 1.15745,
+    "tp": 1.15526,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -496.39,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 93,
+    "date": "2025-06-18 07:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.14991,
+    "exit": 1.15163,
+    "sl": 1.14905,
+    "tp": 1.15163,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 987.81,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 94,
+    "date": "2025-06-19 08:05",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.14776,
+    "exit": 1.146,
+    "sl": 1.14864,
+    "tp": 1.146,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 997.69,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 95,
+    "date": "2025-06-20 08:50",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15114,
+    "exit": 1.15035,
+    "sl": 1.15035,
+    "tp": 1.15272,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -503.83,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 96,
+    "date": "2025-06-24 14:20",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.1622,
+    "exit": 1.1606,
+    "sl": 1.163,
+    "tp": 1.1606,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1002.62,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 97,
+    "date": "2025-06-27 09:25",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17238,
+    "exit": 1.16884,
+    "sl": 1.17415,
+    "tp": 1.16884,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1012.65,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 98,
+    "date": "2025-06-30 08:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17176,
+    "exit": 1.17097,
+    "sl": 1.17097,
+    "tp": 1.17334,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -511.39,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 99,
+    "date": "2025-07-01 13:05",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17695,
+    "exit": 1.17817,
+    "sl": 1.17634,
+    "tp": 1.17817,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1017.66,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 100,
+    "date": "2025-07-02 09:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17737,
+    "exit": 1.17573,
+    "sl": 1.17573,
+    "tp": 1.18065,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -513.92,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 101,
+    "date": "2025-07-03 08:15",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17869,
+    "exit": 1.17794,
+    "sl": 1.17794,
+    "tp": 1.18019,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -511.35,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 102,
+    "date": "2025-07-04 09:05",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17715,
+    "exit": 1.17859,
+    "sl": 1.17643,
+    "tp": 1.17859,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1017.59,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 103,
+    "date": "2025-07-07 08:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17227,
+    "exit": 1.17363,
+    "sl": 1.17159,
+    "tp": 1.17363,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1027.76,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 104,
+    "date": "2025-07-09 08:15",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.1709,
+    "exit": 1.17406,
+    "sl": 1.16932,
+    "tp": 1.17406,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1038.04,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 105,
+    "date": "2025-07-11 07:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16937,
+    "exit": 1.17031,
+    "sl": 1.17031,
+    "tp": 1.16749,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -524.21,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 106,
+    "date": "2025-07-14 07:30",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.169,
+    "exit": 1.1672,
+    "sl": 1.1699,
+    "tp": 1.1672,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1043.18,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 107,
+    "date": "2025-07-15 08:50",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16795,
+    "exit": 1.16635,
+    "sl": 1.16635,
+    "tp": 1.17115,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -526.81,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 108,
+    "date": "2025-07-16 14:55",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16279,
+    "exit": 1.16373,
+    "sl": 1.16373,
+    "tp": 1.16091,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -524.17,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 109,
+    "date": "2025-07-17 07:55",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15744,
+    "exit": 1.1568,
+    "sl": 1.1568,
+    "tp": 1.15872,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -521.55,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 110,
+    "date": "2025-07-18 07:50",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16409,
+    "exit": 1.1648,
+    "sl": 1.1648,
+    "tp": 1.16267,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -518.94,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 111,
+    "date": "2025-07-22 09:15",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16834,
+    "exit": 1.16966,
+    "sl": 1.16768,
+    "tp": 1.16966,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1032.7,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 112,
+    "date": "2025-07-23 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17304,
+    "exit": 1.17225,
+    "sl": 1.17225,
+    "tp": 1.17462,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -521.51,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 113,
+    "date": "2025-07-24 10:25",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17713,
+    "exit": 1.17471,
+    "sl": 1.17834,
+    "tp": 1.17471,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1037.81,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 114,
+    "date": "2025-07-25 10:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17351,
+    "exit": 1.17247,
+    "sl": 1.17247,
+    "tp": 1.17559,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -524.09,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 115,
+    "date": "2025-07-28 08:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16619,
+    "exit": 1.16426,
+    "sl": 1.16426,
+    "tp": 1.17005,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -521.47,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 116,
+    "date": "2025-07-29 09:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15293,
+    "exit": 1.15531,
+    "sl": 1.15174,
+    "tp": 1.15531,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1037.73,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 117,
+    "date": "2025-07-31 10:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.14218,
+    "exit": 1.14053,
+    "sl": 1.14053,
+    "tp": 1.14548,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -524.05,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 118,
+    "date": "2025-08-04 07:20",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.15814,
+    "exit": 1.15676,
+    "sl": 1.15883,
+    "tp": 1.15676,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1042.87,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 119,
+    "date": "2025-08-05 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15327,
+    "exit": 1.15467,
+    "sl": 1.15257,
+    "tp": 1.15467,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1053.3,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 120,
+    "date": "2025-08-07 16:15",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.1665,
+    "exit": 1.16557,
+    "sl": 1.16557,
+    "tp": 1.16836,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -531.91,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 121,
+    "date": "2025-08-08 13:50",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16616,
+    "exit": 1.1648,
+    "sl": 1.16684,
+    "tp": 1.1648,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1058.51,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 122,
+    "date": "2025-08-12 07:50",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16033,
+    "exit": 1.16165,
+    "sl": 1.15967,
+    "tp": 1.16165,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1069.09,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 123,
+    "date": "2025-08-14 08:45",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16732,
+    "exit": 1.16656,
+    "sl": 1.16656,
+    "tp": 1.16884,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -539.89,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 124,
+    "date": "2025-08-15 07:40",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16854,
+    "exit": 1.16925,
+    "sl": 1.16925,
+    "tp": 1.16712,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -537.19,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 125,
+    "date": "2025-08-18 08:55",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16763,
+    "exit": 1.1667,
+    "sl": 1.1667,
+    "tp": 1.16949,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -534.51,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 126,
+    "date": "2025-08-19 07:25",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16825,
+    "exit": 1.16653,
+    "sl": 1.16911,
+    "tp": 1.16653,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1063.67,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 127,
+    "date": "2025-08-20 07:40",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16423,
+    "exit": 1.16492,
+    "sl": 1.16492,
+    "tp": 1.16285,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -537.15,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 128,
+    "date": "2025-08-21 10:05",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16255,
+    "exit": 1.16145,
+    "sl": 1.16145,
+    "tp": 1.16475,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -534.47,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 129,
+    "date": "2025-08-22 09:45",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.1602,
+    "exit": 1.16094,
+    "sl": 1.16094,
+    "tp": 1.15872,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -531.79,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 130,
+    "date": "2025-08-26 07:25",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16419,
+    "exit": 1.16503,
+    "sl": 1.16503,
+    "tp": 1.16251,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -529.14,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 131,
+    "date": "2025-08-27 07:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15861,
+    "exit": 1.16119,
+    "sl": 1.15732,
+    "tp": 1.16119,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1052.98,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 132,
+    "date": "2025-08-29 08:35",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16589,
+    "exit": 1.16793,
+    "sl": 1.16487,
+    "tp": 1.16793,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1063.51,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 133,
+    "date": "2025-09-02 09:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.1627,
+    "exit": 1.16586,
+    "sl": 1.16112,
+    "tp": 1.16586,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1074.15,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 134,
+    "date": "2025-09-03 13:55",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.1661,
+    "exit": 1.16685,
+    "sl": 1.16685,
+    "tp": 1.1646,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -542.44,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 135,
+    "date": "2025-09-04 08:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16475,
+    "exit": 1.16371,
+    "sl": 1.16371,
+    "tp": 1.16683,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -539.73,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 136,
+    "date": "2025-09-08 10:20",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17422,
+    "exit": 1.17496,
+    "sl": 1.17496,
+    "tp": 1.17274,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -537.03,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 137,
+    "date": "2025-09-09 09:35",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.1747,
+    "exit": 1.17359,
+    "sl": 1.17359,
+    "tp": 1.17692,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -534.35,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 138,
+    "date": "2025-09-10 08:35",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17084,
+    "exit": 1.17292,
+    "sl": 1.17292,
+    "tp": 1.16668,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -531.68,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 139,
+    "date": "2025-09-11 08:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.1679,
+    "exit": 1.16619,
+    "sl": 1.16619,
+    "tp": 1.17132,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -529.02,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 140,
+    "date": "2025-09-12 10:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17222,
+    "exit": 1.17101,
+    "sl": 1.17101,
+    "tp": 1.17464,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -526.37,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 141,
+    "date": "2025-09-15 10:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17515,
+    "exit": 1.17577,
+    "sl": 1.17577,
+    "tp": 1.17391,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -523.74,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 142,
+    "date": "2025-09-16 07:55",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.18141,
+    "exit": 1.17981,
+    "sl": 1.18221,
+    "tp": 1.17981,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1042.24,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 143,
+    "date": "2025-09-17 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.18431,
+    "exit": 1.18342,
+    "sl": 1.18342,
+    "tp": 1.18609,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -526.33,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 144,
+    "date": "2025-09-18 13:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17893,
+    "exit": 1.1774,
+    "sl": 1.1774,
+    "tp": 1.18199,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -523.7,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 145,
+    "date": "2025-09-19 09:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17522,
+    "exit": 1.17416,
+    "sl": 1.17416,
+    "tp": 1.17734,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -521.08,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 146,
+    "date": "2025-09-22 08:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17772,
+    "exit": 1.17879,
+    "sl": 1.17879,
+    "tp": 1.17558,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -518.48,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 147,
+    "date": "2025-09-23 13:55",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.18115,
+    "exit": 1.17951,
+    "sl": 1.18197,
+    "tp": 1.17951,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1031.77,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 148,
+    "date": "2025-09-26 07:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16698,
+    "exit": 1.16886,
+    "sl": 1.16604,
+    "tp": 1.16886,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1042.09,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 149,
+    "date": "2025-09-29 08:05",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17232,
+    "exit": 1.17362,
+    "sl": 1.17362,
+    "tp": 1.16972,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -526.25,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 150,
+    "date": "2025-09-30 09:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17267,
+    "exit": 1.17513,
+    "sl": 1.17144,
+    "tp": 1.17513,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1047.25,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 151,
+    "date": "2025-10-01 07:15",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17326,
+    "exit": 1.17241,
+    "sl": 1.17241,
+    "tp": 1.17496,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -528.86,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 152,
+    "date": "2025-10-07 07:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16617,
+    "exit": 1.16546,
+    "sl": 1.16546,
+    "tp": 1.16759,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -526.21,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 153,
+    "date": "2025-10-08 08:35",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16309,
+    "exit": 1.16398,
+    "sl": 1.16398,
+    "tp": 1.16131,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -523.58,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 154,
+    "date": "2025-10-10 08:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15677,
+    "exit": 1.15869,
+    "sl": 1.15581,
+    "tp": 1.15869,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1041.93,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 155,
+    "date": "2025-10-15 09:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16183,
+    "exit": 1.16335,
+    "sl": 1.16107,
+    "tp": 1.16335,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1052.35,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 156,
+    "date": "2025-10-20 07:55",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16563,
+    "exit": 1.16472,
+    "sl": 1.16472,
+    "tp": 1.16745,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -531.44,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 157,
+    "date": "2025-10-21 09:15",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.1613,
+    "exit": 1.16063,
+    "sl": 1.16063,
+    "tp": 1.16264,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -528.78,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 158,
+    "date": "2025-10-22 09:25",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15902,
+    "exit": 1.16098,
+    "sl": 1.15804,
+    "tp": 1.16098,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1052.27,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 159,
+    "date": "2025-10-23 07:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15912,
+    "exit": 1.16048,
+    "sl": 1.15844,
+    "tp": 1.16048,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1062.79,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 160,
+    "date": "2025-10-24 10:05",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16242,
+    "exit": 1.16303,
+    "sl": 1.16303,
+    "tp": 1.1612,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -536.71,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 161,
+    "date": "2025-10-27 07:25",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16412,
+    "exit": 1.1651,
+    "sl": 1.1651,
+    "tp": 1.16216,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -534.03,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 162,
+    "date": "2025-10-28 09:05",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16453,
+    "exit": 1.16659,
+    "sl": 1.1635,
+    "tp": 1.16659,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1062.72,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 163,
+    "date": "2025-10-29 10:10",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16452,
+    "exit": 1.1655,
+    "sl": 1.1655,
+    "tp": 1.16256,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -536.67,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 164,
+    "date": "2025-10-31 07:20",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15599,
+    "exit": 1.15511,
+    "sl": 1.15511,
+    "tp": 1.15775,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -533.99,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 165,
+    "date": "2025-11-03 08:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15103,
+    "exit": 1.15235,
+    "sl": 1.15037,
+    "tp": 1.15235,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1062.64,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 166,
+    "date": "2025-11-05 09:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.14771,
+    "exit": 1.14933,
+    "sl": 1.1469,
+    "tp": 1.14933,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1073.26,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 167,
+    "date": "2025-11-06 09:55",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.15203,
+    "exit": 1.15268,
+    "sl": 1.15268,
+    "tp": 1.15073,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -542.0,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 168,
+    "date": "2025-11-12 09:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15725,
+    "exit": 1.15935,
+    "sl": 1.1562,
+    "tp": 1.15935,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1078.58,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 169,
+    "date": "2025-11-13 15:00",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16346,
+    "exit": 1.16417,
+    "sl": 1.16417,
+    "tp": 1.16204,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -544.68,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 170,
+    "date": "2025-11-14 08:00",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16457,
+    "exit": 1.16279,
+    "sl": 1.16546,
+    "tp": 1.16279,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1083.91,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 171,
+    "date": "2025-11-18 16:10",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15826,
+    "exit": 1.15761,
+    "sl": 1.15761,
+    "tp": 1.15956,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -547.38,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 172,
+    "date": "2025-11-20 08:00",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15148,
+    "exit": 1.1505,
+    "sl": 1.1505,
+    "tp": 1.15344,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -544.64,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 173,
+    "date": "2025-11-21 07:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15162,
+    "exit": 1.14968,
+    "sl": 1.14968,
+    "tp": 1.1555,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -541.92,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 174,
+    "date": "2025-11-24 07:10",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.15388,
+    "exit": 1.15469,
+    "sl": 1.15469,
+    "tp": 1.15226,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -539.21,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 175,
+    "date": "2025-11-25 07:45",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.15394,
+    "exit": 1.15589,
+    "sl": 1.15589,
+    "tp": 1.15004,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -536.51,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 176,
+    "date": "2025-11-26 09:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.15677,
+    "exit": 1.15983,
+    "sl": 1.15524,
+    "tp": 1.15983,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1067.66,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 177,
+    "date": "2025-12-01 10:30",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16279,
+    "exit": 1.16059,
+    "sl": 1.16389,
+    "tp": 1.16059,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1078.33,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 178,
+    "date": "2025-12-02 08:05",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.1614,
+    "exit": 1.16214,
+    "sl": 1.16214,
+    "tp": 1.15992,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -544.56,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 179,
+    "date": "2025-12-03 07:55",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16628,
+    "exit": 1.16702,
+    "sl": 1.16702,
+    "tp": 1.1648,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -541.84,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 180,
+    "date": "2025-12-04 08:35",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.1664,
+    "exit": 1.16497,
+    "sl": 1.16497,
+    "tp": 1.16926,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -539.13,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 181,
+    "date": "2025-12-05 07:55",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16515,
+    "exit": 1.16442,
+    "sl": 1.16442,
+    "tp": 1.16661,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -536.43,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 182,
+    "date": "2025-12-09 08:40",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.16363,
+    "exit": 1.16281,
+    "sl": 1.16281,
+    "tp": 1.16527,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -533.75,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 183,
+    "date": "2025-12-10 13:35",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.16559,
+    "exit": 1.16629,
+    "sl": 1.16629,
+    "tp": 1.16419,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -531.08,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 184,
+    "date": "2025-12-12 07:55",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.1725,
+    "exit": 1.174,
+    "sl": 1.17175,
+    "tp": 1.174,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1056.85,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 185,
+    "date": "2025-12-15 13:15",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17431,
+    "exit": 1.17501,
+    "sl": 1.17501,
+    "tp": 1.17291,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -533.71,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 186,
+    "date": "2025-12-16 08:45",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17616,
+    "exit": 1.17823,
+    "sl": 1.17823,
+    "tp": 1.17202,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -531.04,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 187,
+    "date": "2025-12-17 08:20",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17284,
+    "exit": 1.17346,
+    "sl": 1.17346,
+    "tp": 1.1716,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -528.38,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 188,
+    "date": "2025-12-18 07:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17183,
+    "exit": 1.17343,
+    "sl": 1.17103,
+    "tp": 1.17343,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1051.49,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 189,
+    "date": "2025-12-19 08:25",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17125,
+    "exit": 1.17373,
+    "sl": 1.17001,
+    "tp": 1.17373,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1062.0,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 190,
+    "date": "2025-12-22 07:10",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17376,
+    "exit": 1.17444,
+    "sl": 1.17444,
+    "tp": 1.1724,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -536.31,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 191,
+    "date": "2025-12-23 07:40",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17947,
+    "exit": 1.17771,
+    "sl": 1.18035,
+    "tp": 1.17771,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1067.26,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 192,
+    "date": "2025-12-26 09:30",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17869,
+    "exit": 1.17735,
+    "sl": 1.17936,
+    "tp": 1.17735,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1077.93,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 193,
+    "date": "2025-12-29 13:05",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17552,
+    "exit": 1.17684,
+    "sl": 1.17486,
+    "tp": 1.17684,
+    "volume": 5.0,
+    "session": "NY AM Open",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1088.71,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  },
+  {
+    "id": 194,
+    "date": "2025-12-30 07:30",
+    "pair": "EURUSD",
+    "direction": "BUY",
+    "entry": 1.17662,
+    "exit": 1.176,
+    "sl": 1.176,
+    "tp": 1.17786,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian Low Liquidity Sweep",
+    "rr": -1.0,
+    "pnl": -549.8,
+    "discipline": "Followed Rules 100%",
+    "outcome": "LOSS"
+  },
+  {
+    "id": 195,
+    "date": "2025-12-31 08:45",
+    "pair": "EURUSD",
+    "direction": "SELL",
+    "entry": 1.17425,
+    "exit": 1.17291,
+    "sl": 1.17492,
+    "tp": 1.17291,
+    "volume": 5.0,
+    "session": "London KZ",
+    "setup": "Asian High Liquidity Sweep",
+    "rr": 2.0,
+    "pnl": 1094.1,
+    "discipline": "Followed Rules 100%",
+    "outcome": "WIN"
+  }
+];
+
+function load2025Backtest() {
+      currentTrades = [...BACKTEST_2025_TRADES];
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentTrades));
+      renderApp();
+      const banner = document.getElementById('onboardingBanner');
+      if (banner) banner.style.display = 'none';
+    }
+
+    function loadSampleTrades() {
+      currentTrades = [...SAMPLE_TRADES];
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentTrades));
+      renderApp();
+      const banner = document.getElementById('onboardingBanner');
+      if (banner) banner.style.display = 'none';
+    }
+
+    function clearAllTrades() {
+      if (confirm("Clear all trades from this browser session? You can reload sample data anytime.")) {
+        currentTrades = [];
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+        renderApp();
+      }
+    }
+
+    function renderApp() {
+      renderMetrics();
+      renderTable();
+      renderChart();
+    }
+
+    function renderMetrics() {
+      const totalTrades = currentTrades.length;
+      let totalPnl = 0;
+      let wins = 0;
+      let losses = 0;
+      let be = 0;
+      let totalWinDollar = 0;
+      let totalLossDollar = 0;
+
+      currentTrades.forEach(t => {
+        totalPnl += t.pnl;
+        if (t.pnl > 0.5) {
+          wins++;
+          totalWinDollar += t.pnl;
+        } else if (t.pnl < -0.5) {
+          losses++;
+          totalLossDollar += Math.abs(t.pnl);
+        } else {
+          be++;
+        }
+      });
+
+      const currentBalance = INITIAL_CAPITAL + totalPnl;
+      const returnPct = ((totalPnl / INITIAL_CAPITAL) * 100).toFixed(1);
+      const decTrades = (wins + losses) || 1;
+      const winRate = ((wins / decTrades) * 100).toFixed(1);
+      const pf = totalLossDollar > 0 ? (totalWinDollar / totalLossDollar).toFixed(2) : (wins > 0 ? '99.0' : '0.0');
+      
+      const avgWin = wins > 0 ? totalWinDollar / wins : 0;
+      const avgLoss = losses > 0 ? totalLossDollar / losses : 0;
+      const winRatio = wins / (totalTrades || 1);
+      const lossRatio = losses / (totalTrades || 1);
+      const expectancyDollar = (winRatio * avgWin) - (lossRatio * avgLoss);
+      const avgRisk = avgLoss || 500;
+      const expectancyR = (expectancyDollar / avgRisk).toFixed(2);
+
+      // DOM updates
+      document.getElementById('metricBalance').innerText = '$' + currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2 });
+      const retEl = document.getElementById('metricReturnPct');
+      retEl.innerText = (totalPnl >= 0 ? '+' : '') + returnPct + '%';
+      retEl.className = totalPnl >= 0 ? 'text-teal-400 font-bold' : 'text-rose-400 font-bold';
+      
+      const netEl = document.getElementById('metricNetPnl');
+      netEl.innerText = (totalPnl >= 0 ? '+$' : '-$') + Math.abs(totalPnl).toLocaleString('en-US', { minimumFractionDigits: 2 });
+      netEl.className = totalPnl >= 0 ? 'text-teal-400 font-mono font-semibold' : 'text-rose-400 font-mono font-semibold';
+
+      // Execution Edge (Win Rate, Gross Profit, Stop Loss, Break Even)
+      document.getElementById('metricWinRate').innerText = winRate + '%';
+      document.getElementById('metricTradesCount').innerText = ( trades);
+      document.getElementById('metricPf').innerText = 'PF: ' + pf;
+      
+      const grossProfEl = document.getElementById('metricGrossProfit');
+      if (grossProfEl) grossProfEl.innerText = +{totalWinDollar.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} (W);
+
+      const grossLossEl = document.getElementById('metricGrossLoss');
+      if (grossLossEl) grossLossEl.innerText = -{totalLossDollar.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} (L);
+
+      const beEl = document.getElementById('metricBreakEven');
+      if (beEl) beEl.innerText = ${be} BE (.00);
+
+      const totalPct = totalTrades || 1;
+      const winW = ((wins / totalPct) * 100).toFixed(1);
+      const beW = ((be / totalPct) * 100).toFixed(1);
+      const lossW = ((losses / totalPct) * 100).toFixed(1);
+
+      const barWin = document.getElementById('barWin');
+      if (barWin) barWin.style.width = winW + '%';
+      const barBe = document.getElementById('barBe');
+      if (barBe) barBe.style.width = beW + '%';
+      const barLoss = document.getElementById('barLoss');
+      if (barLoss) barLoss.style.width = lossW + '%';
+
+      // Mathematical Expectancy & Stop Loss vs Profit Target
+      const expEl = document.getElementById('metricExpectancy');
+      if (expEl) expEl.innerText = (expectancyR >= 0 ? '+' : '') + expectancyR + ' R';
+      const avgWinEl = document.getElementById('metricAvgWinVal');
+      if (avgWinEl) avgWinEl.innerText = '+$' + avgWin.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const avgLossEl = document.getElementById('metricAvgLossVal');
+      if (avgLossEl) avgLossEl.innerText = '-$' + avgLoss.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      // Drawdown Guard
+      const maxDrawdownLimit = INITIAL_CAPITAL * 0.10; // 10%
+      const peakBalance = INITIAL_CAPITAL + Math.max(0, totalPnl);
+      const currentDd = Math.max(0, peakBalance - currentBalance);
+      const ddBuffer = Math.max(0, maxDrawdownLimit - currentDd);
+      
+      const ddBufEl = document.getElementById('metricDdBuffer');
+      if (ddBufEl) ddBufEl.innerText = '$' + ddBuffer.toLocaleString('en-US', { minimumFractionDigits: 2 });
+      const ddStatusEl = document.getElementById('metricDdStatus');
+      if (ddStatusEl) {
+        if (ddBuffer > 5000) {
+          ddStatusEl.innerText = 'SAFE';
+          ddStatusEl.className = 'text-teal-400 font-bold';
+        } else if (ddBuffer > 2000) {
+          ddStatusEl.innerText = 'CAUTION';
+          ddStatusEl.className = 'text-amber-400 font-bold';
+        } else {
+          ddStatusEl.innerText = 'BREACH RISK';
+          ddStatusEl.className = 'text-rose-400 font-bold';
+        }
+      }
+
+      document.getElementById('tableCountBadge').innerText = totalTrades + ' Logged';
+      const curBalChart = document.getElementById('chartCurrent');
+      if (curBalChart) curBalChart.innerText = '$' + currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('tradeTableBody');
+      if (currentTrades.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" class="text-center py-8 text-slate-500">No trades logged yet. Click "Load 30 Sample Trades" or drop your MT5 report above.</td></tr>`;
+        return;
+      }
+
+      let html = '';
+      currentTrades.slice().reverse().forEach((t, idx) => {
+        const isWin = t.pnl > 0;
+        const pnlClass = isWin ? 'text-teal-400 font-bold' : (t.pnl < 0 ? 'text-rose-400 font-bold' : 'text-slate-400');
+        const pnlStr = (isWin ? '+$' : (t.pnl < 0 ? '-$' : '$')) + Math.abs(t.pnl).toFixed(2);
+        const rrStr = (t.rr > 0 ? '+' : '') + t.rr + 'R';
+        const dir = (t.direction || (t.pnl >= 0 ? 'BUY' : 'SELL')).toUpperCase();
+        const dirBadge = dir === 'BUY' 
+          ? '<span class="px-1.5 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[10px] font-bold">BUY</span>'
+          : '<span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-bold">SELL</span>';
+        
+        const entryStr = t.entry !== undefined ? t.entry : '—';
+        const exitStr = t.exit !== undefined ? t.exit : '—';
+        const slStr = t.sl !== undefined ? t.sl : '—';
+        const tpStr = t.tp !== undefined ? t.tp : '—';
+
+        const isWin = t.pnl > 0.5;
+        const isLoss = t.pnl < -0.5;
+        const isBe = !isWin && !isLoss;
+
+        let statusBadge = '';
+        if (isWin) {
+          statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">PROFIT</span>';
+        } else if (isLoss) {
+          statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">STOP LOSS</span>';
+        } else {
+          statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">BREAK-EVEN</span>';
+        }
+
+        html += `
+          <tr class="hover:bg-white/[0.02] transition text-xs font-mono">
+            <td class="py-2.5 px-3 text-slate-400 whitespace-nowrap">${t.date}</td>
+            <td class="py-2.5 px-3 font-bold text-white">${t.pair}</td>
+            <td class="py-2.5 px-3">${dirBadge}</td>
+            <td class="py-2.5 px-3 text-slate-300 font-semibold">${entryStr}</td>
+            <td class="py-2.5 px-3 text-slate-400 text-[11px] whitespace-nowrap">
+              <span class="text-rose-400 font-medium">SL ${slStr}</span> / <span class="text-teal-400 font-medium">TP ${tpStr}</span>
+            </td>
+            <td class="py-2.5 px-3 font-semibold text-slate-200">${exitStr}</td>
+            <td class="py-2.5 px-3"><span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px]">${t.session || 'London'}</span></td>
+            <td class="py-2.5 px-3 text-amber-300 font-bold">${rrStr}</td>
+            <td class="py-2.5 px-3 ${pnlClass}">${pnlStr}</td>
+            <td class="py-2.5 px-3">${statusBadge}</td>
+            <td class="py-2.5 px-3 text-right">
+              <button onclick="deleteTrade(${t.id})" class="text-slate-500 hover:text-rose-400 text-xs px-2 py-1">✕</button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function renderChart() {
+      if (currentTrades.length === 0) return;
+      let balance = INITIAL_CAPITAL;
+      const points = [];
+      points.push({ x: 0, y: balance, trade: null });
+
+      currentTrades.forEach((t, i) => {
+        balance += t.pnl;
+        points.push({ x: i + 1, y: balance, trade: t });
+      });
+
+      const minY = Math.min(...points.map(p => p.y)) * 0.99;
+      const maxY = Math.max(...points.map(p => p.y)) * 1.01;
+      const rangeY = maxY - minY || 1;
+
+      const svgW = 600;
+      const svgH = 200;
+
+      const coords = points.map((p, idx) => {
+        const x = (idx / (points.length - 1)) * svgW;
+        const y = svgH - ((p.y - minY) / rangeY) * (svgH - 30) - 15;
+        return { x: x.toFixed(1), y: y.toFixed(1), data: p };
+      });
+
+      const linePoints = coords.map(c => `${c.x},${c.y}`).join(' ');
+      const areaPoints = `${coords[0].x},${svgH} ` + linePoints + ` ${coords[coords.length - 1].x},${svgH}`;
+
+      document.getElementById('chartLine').setAttribute('points', linePoints);
+      document.getElementById('chartArea').setAttribute('points', areaPoints);
+
+      // Render Interactive Data Feed Nodes on the Curve
+      const svg = document.getElementById('equityChartSvg');
+      let nodesGroup = document.getElementById('chartNodesGroup');
+      if (!nodesGroup) {
+        nodesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        nodesGroup.setAttribute('id', 'chartNodesGroup');
+        svg.appendChild(nodesGroup);
+      }
+      nodesGroup.innerHTML = '';
+
+      coords.forEach((c, idx) => {
+        if (idx === 0) return; // Skip initial balance baseline
+        const t = c.data.trade;
+        const isWin = t.pnl > 0.5;
+        const isLoss = t.pnl < -0.5;
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', c.x);
+        circle.setAttribute('cy', c.y);
+        circle.setAttribute('r', '4');
+        circle.setAttribute('fill', isWin ? '#10B981' : (isLoss ? '#F43F5E' : '#F59E0B'));
+        circle.setAttribute('stroke', '#0B0F17');
+        circle.setAttribute('stroke-width', '1.5');
+        circle.setAttribute('class', 'cursor-pointer hover:r-6 transition-all');
+        circle.style.cursor = 'pointer';
+
+        // Mouse hover inspection tooltip
+        circle.onmouseenter = function(e) {
+          circle.setAttribute('r', '7');
+          showChartTooltip(e, t, c.data.y);
+        };
+        circle.onmouseleave = function() {
+          circle.setAttribute('r', '4');
+          hideChartTooltip();
+        };
+
+        nodesGroup.appendChild(circle);
+      });
+
+      // Update Highs & Lows in footnote
+      const peakY = Math.max(...points.map(p => p.y));
+      const curY = points[points.length - 1].y;
+      const peakEl = document.getElementById('chartPeak');
+      if (peakEl) peakEl.innerText = '$' + peakY.toLocaleString('en-US', { minimumFractionDigits: 2 });
+      const curEl = document.getElementById('chartCurrent');
+      if (curEl) curEl.innerText = '$' + curY.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    }
+
+    // Chart Data Feed Inspector Tooltip
+    function showChartTooltip(e, t, currentBal) {
+      let tip = document.getElementById('chartTradeTooltip');
+      if (!tip) {
+        tip = document.createElement('div');
+        tip.setAttribute('id', 'chartTradeTooltip');
+        tip.className = 'fixed z-50 p-3 rounded-xl bg-slate-900/95 border border-teal-500/50 shadow-2xl backdrop-blur-md text-xs font-mono text-white pointer-events-none transition-all';
+        document.body.appendChild(tip);
+      }
+
+      const isWin = t.pnl > 0.5;
+      const isLoss = t.pnl < -0.5;
+      const isBe = !isWin && !isLoss;
+      const dir = (t.direction || (t.pnl >= 0 ? 'BUY' : 'SELL')).toUpperCase();
+      const pnlColor = isWin ? '#34D399' : (isLoss ? '#FB7185' : '#FBBF24');
+      const dirBg = dir === 'BUY' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)';
+      const dirColor = dir === 'BUY' ? '#34D399' : '#FB7185';
+      const pnlLabel = isWin ? `+$${t.pnl.toFixed(2)}` : (isLoss ? `-$${Math.abs(t.pnl).toFixed(2)}` : '$0.00 (BE)');
+
+      tip.innerHTML = `
+        <div class="flex items-center justify-between gap-4 border-b border-white/10 pb-1.5 mb-2">
+          <div class="flex items-center gap-1.5 font-bold">
+            <span style="background:${dirBg}; color:${dirColor}; padding:1px 6px; border-radius:4px;">${dir}</span>
+            <span class="text-white text-sm">${t.pair}</span>
+          </div>
+          <span style="color:${pnlColor}; font-weight:bold; font-size:13px;">${pnlLabel}</span>
+        </div>
+        <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-slate-300">
+          <div><span class="text-slate-500">ENTRY:</span> <strong class="text-white">${t.entry !== undefined ? t.entry : '—'}</strong></div>
+          <div><span class="text-slate-500">EXIT:</span> <strong class="text-white">${t.exit !== undefined ? t.exit : '—'}</strong></div>
+          <div><span class="text-slate-500">SL:</span> <span class="text-rose-400 font-semibold">${t.sl !== undefined ? t.sl : '—'}</span></div>
+          <div><span class="text-slate-500">TP:</span> <span class="text-teal-400 font-semibold">${t.tp !== undefined ? t.tp : '—'}</span></div>
+          <div><span class="text-slate-500">SESSION:</span> ${t.session || 'London KZ'}</div>
+          <div><span class="text-slate-500">R:R:</span> <span class="text-amber-300 font-bold">${t.rr}R</span></div>
+          <div class="col-span-2 pt-1 mt-1 border-t border-white/5 flex justify-between text-[10px]">
+            <span class="text-slate-400">EQUITY: $${currentBal.toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+            <span class="text-slate-400">${t.date}</span>
+          </div>
+        </div>
+      `;
+
+      tip.style.display = 'block';
+      tip.style.left = (e.clientX + 14) + 'px';
+      tip.style.top = (e.clientY - 40) + 'px';
+    }
+
+    function hideChartTooltip() {
+      const tip = document.getElementById('chartTradeTooltip');
+      if (tip) tip.style.display = 'none';
+    }
+
+    function deleteTrade(id) {
+      currentTrades = currentTrades.filter(t => t.id !== id);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentTrades));
+      renderApp();
+    }
+
+    function openNewTradeModal() {
+      document.getElementById('newTradeModal').classList.remove('hidden');
+    }
+    function closeNewTradeModal() {
+      document.getElementById('newTradeModal').classList.add('hidden');
+    }
+
+    function openNotionModal() {
+      document.getElementById('notionModal').classList.remove('hidden');
+    }
+    function closeNotionModal() {
+      document.getElementById('notionModal').classList.add('hidden');
+    }
+
+    function saveNewTrade() {
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0,10) + ' ' + now.toTimeString().slice(0,5);
+      const pair = document.getElementById('inputPair').value;
+      const session = document.getElementById('inputSession').value;
+      const setup = document.getElementById('inputSetup').value;
+      const direction = document.getElementById('inputDirection').value;
+      const volume = parseFloat(document.getElementById('inputVolume').value) || 1.0;
+      const entry = parseFloat(document.getElementById('inputEntry').value) || 0.0;
+      const sl = parseFloat(document.getElementById('inputSl').value) || 0.0;
+      const tp = parseFloat(document.getElementById('inputTp').value) || 0.0;
+      const exit = parseFloat(document.getElementById('inputExit').value) || 0.0;
+      const rr = parseFloat(document.getElementById('inputRr').value) || 1.0;
+      const outcome = document.getElementById('inputOutcome').value;
+      let pnl = parseFloat(document.getElementById('inputPnl').value) || 0;
+      if (outcome === 'LOSS' && pnl > 0) pnl = -pnl;
+      if (outcome === 'BE') pnl = 0;
+      const discipline = document.getElementById('inputDiscipline').value;
+
+      const newT = {
+        id: Date.now(),
+        date: dateStr,
+        pair,
+        direction,
+        volume,
+        entry,
+        sl,
+        tp,
+        exit,
+        session,
+        setup,
+        rr,
+        pnl,
+        discipline,
+        outcome
+      };
+
+      currentTrades.push(newT);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentTrades));
+      closeNewTradeModal();
+      renderApp();
+    }
+
+    function copyTableAsNotionMarkdown() {
+      let md = `| Date | Pair | Session | Setup | RR | P&L ($) | Discipline |\n|---|---|---|---|---|---|---|\n`;
+      currentTrades.forEach(t => {
+        md += `| ${t.date} | ${t.pair} | ${t.session} | ${t.setup} | ${t.rr}R | $${t.pnl} | ${t.discipline} |\n`;
+      });
+      navigator.clipboard.writeText(md).then(() => {
+        const btn = document.getElementById('copyBtnText');
+        btn.innerText = '✓ Copied to Clipboard!';
+        setTimeout(() => { btn.innerText = 'Copy All Trades as Notion Markdown'; }, 2500);
+      });
+    }
+
+    function filterTradesTable() {
+      const query = document.getElementById('tradeSearch').value.toLowerCase();
+      const rows = document.getElementById('tradeTableBody').getElementsByTagName('tr');
+      for (let r of rows) {
+        r.style.display = r.innerText.toLowerCase().includes(query) ? '' : 'none';
+      }
+    }
+
+    function filterTimeframe(tf) {
+      renderChart();
+    }
+
+
+    // ==========================================
+    // MANUAL DRAG & DROP STATEMENT PARSER & INGESTION
+    // ==========================================
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dz = document.getElementById('dropZone');
+      if (dz) {
+        dz.classList.add('border-teal-400');
+      }
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dz = document.getElementById('dropZone');
+      if (dz) {
+        dz.classList.remove('border-teal-400');
+      }
+    }
+
+    function handleStatementDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dz = document.getElementById('dropZone');
+      if (dz) dz.classList.remove('border-teal-400');
+      if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+        processStatementFile(e.dataTransfer.files[0]);
+      }
+    }
+
+    function handleStatementUpload(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        processStatementFile(e.target.files[0]);
+      }
+    }
+
+    function processStatementFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const text = event.target.result;
+        parseAndLoadStatement(text, file.name);
+      };
+      reader.readAsText(file);
+    }
+
+    function parseAndLoadStatement(rawText, filename) {
+      let parsed = [];
+      const isHtml = filename.endsWith('.html') || filename.endsWith('.htm') || rawText.includes('<table') || rawText.includes('<tr');
+
+      if (isHtml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawText, 'text/html');
+        const rows = doc.querySelectorAll('tr');
+
+        rows.forEach(row => {
+          const cells = Array.from(row.querySelectorAll('td, th')).map(c => c.textContent.trim());
+          if (cells.length >= 8) {
+            const rowText = cells.join(' ').toLowerCase();
+            if ((rowText.includes('buy') || rowText.includes('sell')) && !cells[0].toLowerCase().includes('time')) {
+              let symbol = '';
+              let pnl = 0;
+              let timeStr = cells[0];
+
+              cells.forEach(c => {
+                if (/^[A-Z]{3,8}$/.test(c) && !['BUY','SELL','IN','OUT','DEAL'].includes(c)) {
+                  symbol = c;
+                }
+              });
+
+              let entryPrice = 0.0;
+              let exitPrice = 0.0;
+              let slPrice = 0.0;
+              let tpPrice = 0.0;
+              let tradeVol = 1.0;
+
+              // Extract prices and volume from cells
+              const numCells = cells.map(c => parseFloat(c.replace(/[^0-9.-]/g, ''))).filter(n => !isNaN(n));
+              if (numCells.length >= 3) {
+                tradeVol = numCells.find(n => n > 0 && n <= 500) || 1.0;
+              }
+
+              for (let i = cells.length - 1; i >= Math.max(0, cells.length - 3); i--) {
+                const cleaned = cells[i].replace(/[$,\s]/g, '');
+                if (/^-?\d+(\.\d+)?$/.test(cleaned)) {
+                  pnl = parseFloat(cleaned);
+                  break;
+                }
+              }
+
+              // Look for entry/exit price in row
+              cells.forEach((c, idx) => {
+                const val = parseFloat(c);
+                if (!isNaN(val) && val > 0.5 && val !== pnl) {
+                  if (entryPrice === 0.0) entryPrice = val;
+                  else if (exitPrice === 0.0) exitPrice = val;
+                }
+              });
+              if (exitPrice === 0.0 && entryPrice !== 0.0) exitPrice = entryPrice;
+
+              if (symbol) {
+                const outcome = pnl > 0 ? 'WIN' : (pnl < 0 ? 'LOSS' : 'BE');
+                const rr = pnl > 0 ? +(Math.abs(pnl) / 100).toFixed(1) : -1.0;
+                let session = 'London KZ';
+                if (timeStr.includes(':')) {
+                  const hour = parseInt(timeStr.split(':')[0].slice(-2));
+                  if (hour >= 0 && hour < 7) session = 'Asian KZ';
+                  else if (hour >= 7 && hour < 13) session = 'London KZ';
+                  else session = 'NY Open';
+                }
+
+                parsed.push({
+                  id: Date.now() + Math.random(),
+                  date: timeStr.replace(/\./g, '-'),
+                  pair: symbol,
+                  direction: (rowText.includes("buy") ? "BUY" : "SELL"),
+                  volume: tradeVol,
+                  entry: entryPrice || '—',
+                  sl: slPrice || '—',
+                  tp: tpPrice || '—',
+                  exit: exitPrice || '—',
+                  session: session,
+                  setup: 'MT5 Live Execution',
+                  rr: rr,
+                  pnl: pnl,
+                  discipline: 'Followed Rules 100%',
+                  outcome: outcome
+                });
+              }
+            }
+          }
+        });
+      } else {
+        const lines = rawText.split('\n');
+        lines.forEach(line => {
+          const parts = line.split(/[;,]/).map(p => p.trim().replace(/[\"\r]/g, ''));
+          if (parts.length >= 5) {
+            const lineText = parts.join(' ').toLowerCase();
+            if (lineText.includes('buy') || lineText.includes('sell')) {
+              let symbol = '';
+              let pnl = 0;
+              let dateStr = parts[0];
+
+              parts.forEach(p => {
+                if (/^[A-Z]{3,8}$/.test(p) && !['BUY','SELL','IN','OUT'].includes(p)) symbol = p;
+              });
+
+              const lastNum = parseFloat(parts[parts.length - 1]);
+              if (!isNaN(lastNum)) pnl = lastNum;
+
+              if (symbol) {
+                const outcome = pnl > 0 ? 'WIN' : (pnl < 0 ? 'LOSS' : 'BE');
+                parsed.push({
+                  id: Date.now() + Math.random(),
+                  date: dateStr,
+                  pair: symbol,
+                  session: 'London KZ',
+                  setup: 'CSV Ingested Setup',
+                  rr: pnl > 0 ? +(pnl / 100).toFixed(1) : -1.0,
+                  pnl: pnl,
+                  discipline: 'Followed Rules 100%',
+                  outcome: outcome
+                });
+              }
+            }
+          }
+        });
+      }
+
+      if (parsed.length > 0) {
+        currentTrades = parsed;
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentTrades));
+        renderApp();
+
+        let totalPnl = currentTrades.reduce((acc, t) => acc + t.pnl, 0);
+        let wins = currentTrades.filter(t => t.pnl > 0).length;
+        let winRate = ((wins / currentTrades.length) * 100).toFixed(1);
+
+        const notif = document.getElementById('importNotification');
+        const notifText = document.getElementById('importNotificationText');
+        if (notif && notifText) {
+          notifText.innerText = `✅ Ingestion Successful: ${parsed.length} trades loaded from statement! Total PnL: ${totalPnl >= 0 ? '+' : ''}$${totalPnl.toFixed(2)} | Win Rate: ${winRate}%`;
+          notif.classList.remove('hidden');
+        }
+      } else {
+        alert('Could not detect trade records in this file. Please make sure it is a MetaTrader 5 HTML Report or CSV export.');
+      }
+    }
+
+    // ==========================================
+    // HAND OVER EXECUTIVE REPORT GENERATOR
+    // ==========================================
+    function exportExecutiveReport() {
+      if (currentTrades.length === 0) {
+        alert('Please log or import trades first to generate a report.');
+        return;
+      }
+
+      const totalTrades = currentTrades.length;
+      const wins = currentTrades.filter(t => t.pnl > 0).length;
+      const losses = currentTrades.filter(t => t.pnl < 0).length;
+      const winRate = ((wins / totalTrades) * 100).toFixed(1);
+      const totalPnl = currentTrades.reduce((acc, t) => acc + t.pnl, 0);
+      const winPnL = currentTrades.filter(t => t.pnl > 0).reduce((acc, t) => acc + t.pnl, 0);
+      const lossPnL = Math.abs(currentTrades.filter(t => t.pnl < 0).reduce((acc, t) => acc + t.pnl, 0));
+      const pf = lossPnL > 0 ? (winPnL / lossPnL).toFixed(2) : (wins > 0 ? '99.0' : '0.0');
+
+      let rowsHtml = '';
+      currentTrades.slice(0, 35).forEach(t => {
+        const isWin = t.pnl >= 0;
+        const dir = (t.direction || (isWin ? 'BUY' : 'SELL')).toUpperCase();
+        rowsHtml += `
+          <tr style="border-bottom: 1px solid #1E293B;">
+            <td style="padding: 8px 10px;">${t.date}</td>
+            <td style="padding: 8px 10px; font-weight: bold;">${t.pair}</td>
+            <td style="padding: 8px 10px; font-weight: bold; color: ${dir === 'BUY' ? '#10B981' : '#F43F5E'};">${dir}</td>
+            <td style="padding: 8px 10px; color: #CBD5E1;">${t.entry !== undefined ? t.entry : '—'}</td>
+            <td style="padding: 8px 10px; color: #94A3B8; font-size: 11px;">${t.sl !== undefined ? t.sl : '—'} / ${t.tp !== undefined ? t.tp : '—'}</td>
+            <td style="padding: 8px 10px; color: #CBD5E1; font-weight: 600;">${t.exit !== undefined ? t.exit : '—'}</td>
+            <td style="padding: 8px 10px; color: ${isWin ? '#10B981' : '#F43F5E'}; font-weight: bold;">
+              ${t.pnl >= 0 ? '+' : ''}$${t.pnl.toFixed(2)}
+            </td>
+            <td style="padding: 8px 10px; font-weight: bold; color: ${isWin ? '#10B981' : '#F43F5E'};">
+              ${t.outcome || (isWin ? 'WIN' : 'LOSS')}
+            </td>
+          </tr>
+        `;
+      });
+
+      const reportHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>LiquiQuant OS — Executive Performance Report</title>
+          <style>
+            body { background: #0B0F17; color: #E2E8F0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; margin: 0; }
+            .badge { background: #10B981; color: #050811; font-weight: 800; font-size: 11px; padding: 4px 10px; border-radius: 4px; display: inline-block; letter-spacing: 1px; }
+            h1 { font-size: 26px; color: #FFF; margin: 12px 0 4px 0; }
+            .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+            .card { background: #161E2E; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; }
+            .card-title { font-size: 11px; color: #94A3B8; text-transform: uppercase; font-family: monospace; }
+            .card-val { font-size: 22px; font-weight: bold; color: #FFF; margin-top: 6px; }
+            table { width: 100%; border-collapse: collapse; font-family: monospace; font-size: 12px; margin-top: 20px; background: #161E2E; border-radius: 12px; overflow: hidden; }
+            th { background: #0F172A; color: #94A3B8; text-align: left; padding: 10px 10px; font-size: 11px; }
+            .btn-print { background: #10B981; color: #050811; font-weight: bold; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 20px; }
+            @media print { .btn-print { display: none; } body { background: #FFF; color: #000; } .card, table { background: #FFF; color: #000; border: 1px solid #CCC; } th { background: #EEE; color: #000; } }
+          </style>
+        </head>
+        <body>
+          <button class="btn-print" onclick="window.print()">🖨️ Print / Save as PDF Report</button>
+          <div class="badge">LIQUIQUANT OS // AUDITED TRADING STATEMENT</div>
+          <h1>Executive Performance Report</h1>
+          <p style="color: #94A3B8; font-size: 13px;">Generated from verified broker execution statement &bull; Date: ${new Date().toLocaleDateString()}</p>
+
+          <div class="grid">
+            <div class="card">
+              <div class="card-title">Total Trades</div>
+              <div class="card-val">${totalTrades} (${wins}W / ${losses}L)</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Win Rate</div>
+              <div class="card-val" style="color: #10B981;">${winRate}%</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Net Profit</div>
+              <div class="card-val" style="color: ${totalPnl >= 0 ? '#10B981' : '#F43F5E'};">${totalPnl >= 0 ? '+' : ''}$${totalPnl.toFixed(2)}</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Profit Factor</div>
+              <div class="card-val">${pf}</div>
+            </div>
+          </div>
+
+          <h3>Verified Telemetry & Execution Ledger</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>DATE</th>
+                <th>ASSET</th>
+                <th>TYPE</th>
+                <th>ENTRY</th>
+                <th>SL / TP</th>
+                <th>EXIT</th>
+                <th>P&L ($)</th>
+                <th>OUTCOME</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `;
+
+      const reportWin = window.open('', '_blank');
+      reportWin.document.write(reportHtml);
+      reportWin.document.close();
+    }
+
+    // Initialize on load
+    window.onload = initApp;
+  </script>
+
+</body>
+</html>

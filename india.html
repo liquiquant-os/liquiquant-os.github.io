@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiquiQuant OS | Indian Markets (NIFTY & BANKNIFTY) Quant Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0B0F17;
+      --card-bg: rgba(16, 22, 34, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-mint: #2DD4BF;
+      --accent-gold: #E5C07B;
+      --accent-red: #F87171;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .bg-grid {
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .fintech-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+  </style>
+</head>
+<body class="bg-grid min-h-screen pb-20">
+
+  <!-- TOP HEADER -->
+  <header class="border-b border-white/5 bg-[#0B0F17]/95 sticky top-0 z-30 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-500/20 to-amber-500/20 border border-teal-400/40 flex items-center justify-center font-mono font-bold text-teal-300 text-sm shadow-md">
+          LQ
+        </div>
+        <div>
+          <span class="font-extrabold text-white text-base tracking-tight">LIQUIQUANT OS</span>
+          <span class="text-teal-400 font-extrabold text-xs px-1.5 py-0.5 rounded bg-teal-500/10 border border-teal-500/20 ml-2">NSE QUANT</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="app.html" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-mono transition">
+          &larr; Global Terminal
+        </a>
+        <a href="index.html" class="px-3 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 font-mono font-bold text-xs transition">
+          Storefront
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-8 space-y-8">
+    
+    <!-- Title Statement -->
+    <div class="text-center max-w-2xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-mono mb-3">
+        <span>🇮🇳</span>
+        <span>NSE NIFTY & BANKNIFTY DERIVATIVES ENGINE</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+        Indian Futures & Options Sizing Calculator
+      </h1>
+      <p class="text-slate-400 text-sm mt-2">
+        Fixed Rupee Risk Management • Delta-Adjusted Premium Sizing • 7-Point SMT Gatekeeper
+      </p>
+    </div>
+
+    <!-- MAIN TWO COLUMN GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- LEFT: CALCULATOR INPUTS (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <div class="fintech-card p-6">
+          <div class="flex items-center justify-between pb-4 border-b border-white/5 mb-5">
+            <h2 class="font-bold text-white text-base flex items-center gap-2">
+              <span class="text-teal-400">01</span>
+              <span>Capital & Instrument Parameters</span>
+            </h2>
+            <span class="text-xs font-mono text-slate-400">Auto Lot Formula</span>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Account Capital -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1.5">TRADING CAPITAL (₹)</label>
+                <input id="inCapital" type="number" value="500000" oninput="calcNSE()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white font-mono focus:border-teal-400 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1.5">MAX RISK PER TRADE (%)</label>
+                <select id="inRiskPct" onchange="calcNSE()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white font-mono focus:border-teal-400 focus:outline-none">
+                  <option value="0.25">0.25% (Conservative Scalp)</option>
+                  <option value="0.50" selected>0.50% (Institutional Standard)</option>
+                  <option value="1.00">1.00% (High Conviction)</option>
+                  <option value="2.00">2.00% (Max Aggressive)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Instrument Selection -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1.5">INDEX SYMBOL</label>
+                <select id="inIndex" onchange="onIndexChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white font-mono focus:border-teal-400 focus:outline-none">
+                  <option value="BANKNIFTY" selected>BANKNIFTY (30 Qty/Lot)</option>
+                  <option value="NIFTY">NIFTY 50 (75 Qty/Lot)</option>
+                  <option value="FINNIFTY">FINNIFTY (65 Qty/Lot)</option>
+                  <option value="MIDCPNIFTY">MIDCPNIFTY (120 Qty/Lot)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1.5">CONTRACT TYPE</label>
+                <select id="inContract" onchange="calcNSE()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white font-mono focus:border-teal-400 focus:outline-none">
+                  <option value="FUTURES" selected>Index Futures (Points SL)</option>
+                  <option value="OPTIONS_BUY">Options Buying (Premium SL)</option>
+                  <option value="OPTIONS_SELL">Options Selling (Margin SL)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Price & SL Points & R:R Selector -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-2">
+              <div>
+                <label id="lblEntry" class="block text-xs font-mono text-slate-400 mb-1.5">ENTRY (PTS / ₹)</label>
+                <input id="inEntry" type="number" value="51200" oninput="onPriceOrSLChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white font-mono focus:border-teal-400 focus:outline-none" />
+              </div>
+              <div>
+                <label id="lblSL" class="block text-xs font-mono text-slate-400 mb-1.5">STOP LOSS (PTS / ₹)</label>
+                <input id="inSL" type="number" value="51140" oninput="onPriceOrSLChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white font-mono focus:border-teal-400 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1.5">PLANNED R:R</label>
+                <select id="inRR" onchange="onRRSelectChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white font-mono focus:border-teal-400 focus:outline-none">
+                  <option value="1.5">1:1.5 R:R (Scalp)</option>
+                  <option value="2.0" selected>1:2.0 R:R (Standard)</option>
+                  <option value="2.5">1:2.5 R:R (Momentum)</option>
+                  <option value="3.0">1:3.0 R:R (Expansion)</option>
+                  <option value="4.0">1:4.0 R:R (Runner)</option>
+                </select>
+              </div>
+              <div>
+                <label id="lblTarget" class="block text-xs font-mono text-slate-400 mb-1.5">TARGET (PTS / ₹)</label>
+                <input id="inTarget" type="number" value="51320" oninput="onTargetManualChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white font-mono focus:border-teal-400 focus:outline-none" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7-POINT SMC GATEKEEPER CHECKLIST -->
+        <div class="fintech-card p-6">
+          <div class="flex items-center justify-between pb-4 border-b border-white/5 mb-4">
+            <h2 class="font-bold text-white text-base flex items-center gap-2">
+              <span class="text-amber-400">02</span>
+              <span>7-Point NSE Pre-Trade Gatekeeper Scorecard</span>
+            </h2>
+            <span id="chkScoreBadge" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
+              0 / 7 PASS
+            </span>
+          </div>
+
+          <div class="space-y-2.5 text-sm" id="checklistContainer">
+            <label class="flex items-start gap-3 p-2.5 rounded-lg bg-slate-900/60 border border-white/5 hover:border-slate-700 cursor-pointer transition">
+              <input type="checkbox" onchange="evalChecklist()" class="chk-item mt-1 rounded bg-slate-800 border-slate-700 text-teal-500 focus:ring-0">
+              <div>
+                <div class="text-white font-medium">1. Higher Timeframe Draw on Liquidity (DOL)</div>
+                <div class="text-slate-400 text-xs">Clean target identified at PDH, PDL, Weekly High/Low, or unmitigated 15M FVG.</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-2.5 rounded-lg bg-slate-900/60 border border-white/5 hover:border-slate-700 cursor-pointer transition">
+              <input type="checkbox" onchange="evalChecklist()" class="chk-item mt-1 rounded bg-slate-800 border-slate-700 text-teal-500 focus:ring-0">
+              <div>
+                <div class="text-white font-medium">2. Correlated Nifty vs BankNifty SMT Divergence</div>
+                <div class="text-slate-400 text-xs">One index breaks key swing extreme while the other index fails (institutional footprint).</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-2.5 rounded-lg bg-slate-900/60 border border-white/5 hover:border-slate-700 cursor-pointer transition">
+              <input type="checkbox" onchange="evalChecklist()" class="chk-item mt-1 rounded bg-slate-800 border-slate-700 text-teal-500 focus:ring-0">
+              <div>
+                <div class="text-white font-medium">3. Killzone Timing (No Lunch Chop)</div>
+                <div class="text-slate-400 text-xs">Morning Open Killzone (09:15 - 10:30 IST) or European Confluence (13:00 - 14:30 IST).</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-2.5 rounded-lg bg-slate-900/60 border border-white/5 hover:border-slate-700 cursor-pointer transition">
+              <input type="checkbox" onchange="evalChecklist()" class="chk-item mt-1 rounded bg-slate-800 border-slate-700 text-teal-500 focus:ring-0">
+              <div>
+                <div class="text-white font-medium">4. VWAP & Cash/Futures Confluence</div>
+                <div class="text-slate-400 text-xs">Price cleanly displaced above/below Day VWAP with institutional volume expansion.</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-2.5 rounded-lg bg-slate-900/60 border border-white/5 hover:border-slate-700 cursor-pointer transition">
+              <input type="checkbox" onchange="evalChecklist()" class="chk-item mt-1 rounded bg-slate-800 border-slate-700 text-teal-500 focus:ring-0">
+              <div>
+                <div class="text-white font-medium">5. Option Chain & PCR Sentiment Alignment</div>
+                <div class="text-slate-400 text-xs">Call/Put open interest unwinding or strong support/resistance wall confirmation.</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-2.5 rounded-lg bg-slate-900/60 border border-white/5 hover:border-slate-700 cursor-pointer transition">
+              <input type="checkbox" onchange="evalChecklist()" class="chk-item mt-1 rounded bg-slate-800 border-slate-700 text-teal-500 focus:ring-0">
+              <div>
+                <div class="text-white font-medium">6. Asymmetric Math (&ge; 1:2 R:R Minimum)</div>
+                <div class="text-slate-400 text-xs">Target distance is at least 2x the point risk. 1 win wipes out 2 consecutive losses.</div>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-2.5 rounded-lg bg-slate-900/60 border border-white/5 hover:border-slate-700 cursor-pointer transition">
+              <input type="checkbox" onchange="evalChecklist()" class="chk-item mt-1 rounded bg-slate-800 border-slate-700 text-teal-500 focus:ring-0">
+              <div>
+                <div class="text-white font-medium">7. Mechanical Invalidation Level Defined</div>
+                <div class="text-slate-400 text-xs">Hard stop loss order placed in broker terminal immediately upon market entry.</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: LIVE METRICS & VERDICT (5 Cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <div class="fintech-card p-6 border-teal-500/30">
+          <div class="flex items-center justify-between pb-4 border-b border-white/5 mb-5">
+            <h2 class="font-bold text-white text-base">Execution Sizing Card</h2>
+            <span class="mono text-xs px-2 py-0.5 rounded bg-teal-500/10 text-teal-300 border border-teal-500/20">NSE LIVE</span>
+          </div>
+
+          <div class="space-y-4">
+            
+            <!-- Big Allowed Lots Box -->
+            <div class="p-4 rounded-xl bg-slate-900/90 border border-teal-500/30 text-center">
+              <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">MAX ALLOWED SIZE</div>
+              <div id="outLots" class="text-4xl font-extrabold text-teal-300 mono mt-1">2 LOTS</div>
+              <div id="outQty" class="text-xs font-mono text-slate-400 mt-1">30 Quantity (BANKNIFTY)</div>
+            </div>
+
+            <!-- Detail Breakdown Rows -->
+            <div class="space-y-2.5 text-xs font-mono pt-2">
+              <div class="flex justify-between items-center py-1.5 border-b border-white/5">
+                <span class="text-slate-400">Total Capital Risk Cap:</span>
+                <span id="outRiskCap" class="text-white font-bold">₹2,500 (0.50%)</span>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-white/5">
+                <span class="text-slate-400">Point Risk per Unit:</span>
+                <span id="outPointRisk" class="text-amber-400 font-bold">60.0 Points</span>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-white/5">
+                <span class="text-slate-400">Risk per 1 Lot:</span>
+                <span id="outRiskPerLot" class="text-slate-300">₹900.00</span>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-white/5">
+                <span class="text-slate-400">Total Max Loss (Actual):</span>
+                <span id="outActualRisk" class="text-red-400 font-bold">₹1,800.00</span>
+              </div>
+              <div class="flex justify-between items-center py-1.5 border-b border-white/5">
+                <span class="text-slate-400">Target Profit (+2.0R):</span>
+                <span id="outTargetProfit" class="text-teal-400 font-bold">+₹3,600.00</span>
+              </div>
+              <div class="flex justify-between items-center py-1.5">
+                <span class="text-slate-400">Consecutive Loss Buffer:</span>
+                <span id="outLossBuffer" class="text-emerald-400 font-bold">277 Trades</span>
+              </div>
+            </div>
+
+            <!-- Gatekeeper Verdict -->
+            <div id="verdictBox" class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center">
+              <div class="text-xs font-mono text-amber-300 uppercase tracking-wide">GATEKEEPER STATUS</div>
+              <div id="outGatekeeperVerdict" class="text-base font-extrabold text-amber-400 mt-1">
+                EXECUTION BLOCKED (&lt; 5/7)
+              </div>
+              <div id="outGatekeeperSub" class="text-[11px] text-slate-400 mt-1">
+                Complete at least 5 verification rules before placing the order.
+              </div>
+            </div>
+
+            <button onclick="simulateOrderExecution()" id="btnSimulate" class="w-full py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-mono font-bold text-xs transition shadow-lg shadow-teal-500/20">
+              ⚡ Trigger Broker Auto-Sync Test
+            </button>
+
+            <!-- Sync Log Stream -->
+            <div id="syncLog" class="hidden p-3 rounded-lg bg-black/60 border border-white/10 font-mono text-[11px] text-teal-300 space-y-1">
+              <div>[Broker Sync Bridge Active]</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- DYNAMIC EXPECTANCY & WIN RATE ENGINE -->
+        <div class="fintech-card p-5 border-amber-500/30">
+          <div class="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
+            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+              <span class="text-amber-400">📊</span>
+              <span>Dynamic R:R & Expectancy Matrix</span>
+            </h3>
+            <span id="badgeCurrentRR" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">1:2.0 R:R</span>
+          </div>
+
+          <div class="space-y-3 text-xs font-mono">
+            <div class="flex justify-between items-center py-1 border-b border-white/5">
+              <span class="text-slate-400">Required Break-Even Win Rate:</span>
+              <span id="outBEWinRate" class="text-white font-bold">33.3%</span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b border-white/5">
+              <span class="text-slate-400">Loss Erasure Power:</span>
+              <span id="outErasure" class="text-teal-300 font-bold">1 Win erases 2.0 Losses</span>
+            </div>
+            
+            <div class="pt-2">
+              <div class="text-[11px] text-slate-400 mb-2 uppercase">Projected Net Return on 20 Trades:</div>
+              <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
+                <div class="p-2 rounded-lg bg-slate-900 border border-white/5">
+                  <div class="text-slate-400">35% WR</div>
+                  <div id="pnl35" class="font-bold text-teal-400 mt-0.5">+₹1,800</div>
+                  <div id="r35" class="text-[10px] text-slate-500">+1.0R</div>
+                </div>
+                <div class="p-2 rounded-lg bg-slate-900 border border-teal-500/30">
+                  <div class="text-teal-300 font-bold">45% WR</div>
+                  <div id="pnl45" class="font-bold text-amber-400 mt-0.5">+₹12,600</div>
+                  <div id="r45" class="text-[10px] text-teal-300 font-semibold">+7.0R</div>
+                </div>
+                <div class="p-2 rounded-lg bg-slate-900 border border-white/5">
+                  <div class="text-slate-400">55% WR</div>
+                  <div id="pnl55" class="font-bold text-emerald-400 mt-0.5">+₹23,400</div>
+                  <div id="r55" class="text-[10px] text-slate-500">+13.0R</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    const LOT_SIZES = {
+      'BANKNIFTY': 30,
+      'NIFTY': 75,
+      'FINNIFTY': 65,
+      'MIDCPNIFTY': 120
+    };
+
+    function onRRSelectChange() {
+      const rr = parseFloat(document.getElementById('inRR').value) || 2.0;
+      const entry = parseFloat(document.getElementById('inEntry').value) || 0;
+      const sl = parseFloat(document.getElementById('inSL').value) || 0;
+      const pointRisk = Math.abs(entry - sl);
+      
+      const isLong = entry >= sl;
+      const target = isLong ? (entry + (pointRisk * rr)) : (entry - (pointRisk * rr));
+      document.getElementById('inTarget').value = Math.round(target);
+      calcNSE();
+    }
+
+    function onPriceOrSLChange() {
+      onRRSelectChange();
+    }
+
+    function onTargetManualChange() {
+      calcNSE();
+    }
+
+    function onIndexChange() {
+      const sym = document.getElementById('inIndex').value;
+      if (sym === 'BANKNIFTY') {
+        document.getElementById('inEntry').value = 51200;
+        document.getElementById('inSL').value = 51140;
+      } else if (sym === 'NIFTY') {
+        document.getElementById('inEntry').value = 24500;
+        document.getElementById('inSL').value = 24460;
+      } else if (sym === 'FINNIFTY') {
+        document.getElementById('inEntry').value = 23600;
+        document.getElementById('inSL').value = 23560;
+      } else {
+        document.getElementById('inEntry').value = 12800;
+        document.getElementById('inSL').value = 12770;
+      }
+      onRRSelectChange();
+    }
+
+    function calcNSE() {
+      const capital = parseFloat(document.getElementById('inCapital').value) || 500000;
+      const riskPct = parseFloat(document.getElementById('inRiskPct').value) / 100;
+      const sym = document.getElementById('inIndex').value;
+      const contract = document.getElementById('inContract').value;
+      const lotSize = LOT_SIZES[sym] || 30;
+
+      const entry = parseFloat(document.getElementById('inEntry').value) || 0;
+      const sl = parseFloat(document.getElementById('inSL').value) || 0;
+      const target = parseFloat(document.getElementById('inTarget').value) || 0;
+
+      const pointRisk = Math.abs(entry - sl);
+      const pointTarget = Math.abs(target - entry);
+      const rr = pointRisk > 0 ? (pointTarget / pointRisk) : 2.0;
+
+      const maxRiskCap = capital * riskPct;
+      const riskPerLot = pointRisk * lotSize;
+
+      let allowedLots = 0;
+      if (riskPerLot > 0) {
+        allowedLots = Math.floor(maxRiskCap / riskPerLot);
+      }
+      if (allowedLots < 1 && maxRiskCap >= riskPerLot * 0.8) {
+        allowedLots = 1;
+      }
+
+      const totalQty = allowedLots * lotSize;
+      const actualRisk = allowedLots * riskPerLot;
+      const targetProfit = allowedLots * (pointTarget * lotSize);
+      const lossBuffer = actualRisk > 0 ? Math.floor(capital / actualRisk) : 0;
+
+      // Update UI Sizing card
+      document.getElementById('outLots').innerText = `${allowedLots} LOT${allowedLots === 1 ? '' : 'S'}`;
+      document.getElementById('outQty').innerText = `${totalQty} Quantity (${sym} • ${contract})`;
+      document.getElementById('outRiskCap').innerText = `₹${maxRiskCap.toLocaleString('en-IN', {maximumFractionDigits: 0})} (${(riskPct*100).toFixed(2)}%)`;
+      document.getElementById('outPointRisk').innerText = `${pointRisk.toFixed(1)} Points`;
+      document.getElementById('outRiskPerLot').innerText = `₹${riskPerLot.toLocaleString('en-IN', {maximumFractionDigits: 2})}`;
+      document.getElementById('outActualRisk').innerText = `₹${actualRisk.toLocaleString('en-IN', {maximumFractionDigits: 2})}`;
+      document.getElementById('outTargetProfit').innerText = `+₹${targetProfit.toLocaleString('en-IN', {maximumFractionDigits: 2})} (+${rr.toFixed(1)}R)`;
+      document.getElementById('outLossBuffer').innerText = `${lossBuffer} Consecutive Losses`;
+
+      // Update Expectancy Matrix
+      document.getElementById('badgeCurrentRR').innerText = `1:${rr.toFixed(1)} R:R`;
+      const beWinRate = (1 / (1 + rr)) * 100;
+      document.getElementById('outBEWinRate').innerText = `${beWinRate.toFixed(1)}%`;
+      document.getElementById('outErasure').innerText = `1 Win erases ${rr.toFixed(1)} Losses`;
+
+      // 20 Trade Expectancy Calculations
+      const perTradeRisk = actualRisk > 0 ? actualRisk : 1800;
+      // 35% WR: 7 Wins, 13 Losses
+      const netR35 = (7 * rr) - 13;
+      const pnl35Val = netR35 * perTradeRisk;
+      document.getElementById('r35').innerText = `${netR35 >= 0 ? '+' : ''}${netR35.toFixed(1)}R`;
+      document.getElementById('pnl35').innerText = `${pnl35Val >= 0 ? '+₹' : '-₹'}${Math.abs(pnl35Val).toLocaleString('en-IN', {maximumFractionDigits: 0})}`;
+      document.getElementById('pnl35').className = `font-bold mt-0.5 ${pnl35Val >= 0 ? 'text-teal-400' : 'text-rose-400'}`;
+
+      // 45% WR: 9 Wins, 11 Losses
+      const netR45 = (9 * rr) - 11;
+      const pnl45Val = netR45 * perTradeRisk;
+      document.getElementById('r45').innerText = `${netR45 >= 0 ? '+' : ''}${netR45.toFixed(1)}R`;
+      document.getElementById('pnl45').innerText = `${pnl45Val >= 0 ? '+₹' : '-₹'}${Math.abs(pnl45Val).toLocaleString('en-IN', {maximumFractionDigits: 0})}`;
+      document.getElementById('pnl45').className = `font-bold mt-0.5 ${pnl45Val >= 0 ? 'text-amber-400' : 'text-rose-400'}`;
+
+      // 55% WR: 11 Wins, 9 Losses
+      const netR55 = (11 * rr) - 9;
+      const pnl55Val = netR55 * perTradeRisk;
+      document.getElementById('r55').innerText = `${netR55 >= 0 ? '+' : ''}${netR55.toFixed(1)}R`;
+      document.getElementById('pnl55').innerText = `${pnl55Val >= 0 ? '+₹' : '-₹'}${Math.abs(pnl55Val).toLocaleString('en-IN', {maximumFractionDigits: 0})}`;
+      document.getElementById('pnl55').className = `font-bold mt-0.5 ${pnl55Val >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+      evalChecklist();
+    }
+
+    function evalChecklist() {
+      const items = document.querySelectorAll('.chk-item');
+      let checked = 0;
+      items.forEach(el => { if (el.checked) checked++; });
+
+      const badge = document.getElementById('chkScoreBadge');
+      badge.innerText = `${checked} / 7 PASS`;
+
+      const verdictBox = document.getElementById('verdictBox');
+      const vText = document.getElementById('outGatekeeperVerdict');
+      const vSub = document.getElementById('outGatekeeperSub');
+
+      if (checked >= 5) {
+        badge.className = 'text-xs font-mono font-bold px-2 py-0.5 rounded bg-teal-500/10 border border-teal-500/30 text-teal-300';
+        verdictBox.className = 'mt-4 p-4 rounded-xl bg-teal-500/10 border border-teal-500/30 text-center';
+        vText.className = 'text-base font-extrabold text-teal-300 mt-1';
+        vText.innerText = 'EXECUTION APPROVED (SCORE >= 5/7)';
+        vSub.innerText = 'Risk math verified. Setup cleared for broker transmission.';
+      } else {
+        badge.className = 'text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300';
+        verdictBox.className = 'mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center';
+        vText.className = 'text-base font-extrabold text-amber-400 mt-1';
+        vText.innerText = `EXECUTION BLOCKED (${checked}/7)`;
+        vSub.innerText = 'Complete at least 5 verification rules before placing the order.';
+      }
+    }
+
+    function simulateOrderExecution() {
+      const log = document.getElementById('syncLog');
+      log.classList.remove('hidden');
+      const sym = document.getElementById('inIndex').value;
+      const lots = document.getElementById('outLots').innerText;
+      const risk = document.getElementById('outActualRisk').innerText;
+      
+      log.innerHTML = `
+        <div class="text-amber-300">⚡ Transmitting order signal to local broker bridge...</div>
+        <div>[Bridge] Order Filled: BUY ${lots} ${sym} | Risk: ${risk}</div>
+        <div class="text-teal-400">[Notion API] Auto-Syncing into Notion Trade Journal Database...</div>
+        <div class="text-emerald-400">&#10003; Trade logged in Notion! Ticket #NSE-20261022-01</div>
+      `;
+    }
+
+    // Init
+    calcNSE();
+  </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiquiQuant OS | Notion Interactive Quant Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0B0F17;
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .bg-grid {
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .glass-card {
+      background: linear-gradient(145deg, rgba(17, 24, 39, 0.80), rgba(11, 16, 26, 0.90));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(45, 212, 191, 0.22);
+      border-radius: 18px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+    .glass-gold {
+      background: linear-gradient(145deg, rgba(26, 22, 18, 0.80), rgba(13, 16, 24, 0.90));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(229, 192, 123, 0.25);
+      border-radius: 18px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px rgba(45, 212, 191, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-grid min-h-screen">
+
+  <!-- Top Header Bar -->
+  <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 pb-6 border-b border-emerald-500/20 mb-8">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-500/20 to-amber-500/20 border-2 border-emerald-400 flex items-center justify-center font-mono font-black text-emerald-400 text-xl shadow-lg">
+        LQ
+      </div>
+      <div>
+        <div class="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+          LIQUIQUANT <span class="text-emerald-400">OS</span>
+          <span class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">NOTION HUB</span>
+        </div>
+        <div class="text-xs font-mono text-slate-400 mt-0.5">INSTITUTIONAL QUANT ORDER FLOW • QUANTITATIVE TRADING HUB</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-300">BROKER SYNC: <strong class="text-emerald-400">ONLINE</strong></span>
+      </div>
+      <a href="https://liquiquant.netlify.app" target="_blank" class="px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono font-bold text-xs transition">
+        Full Suite ⚡
+      </a>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+
+    <!-- Tool 1: Interactive Prop Firm Position Sizing Engine -->
+    <div class="glass-card p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-5">
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-400 text-lg">🛡️</span>
+            <span class="font-bold text-white text-base">Prop Firm Lot Size & Drawdown Engine</span>
+          </div>
+          <span class="mono text-xs text-amber-400 font-bold bg-amber-500/10 px-2 py-1 rounded border border-amber-500/30">MODULE 01</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 text-xs font-mono mb-4">
+          <div>
+            <label class="text-slate-400 block mb-1">ACCOUNT CAPITAL ($)</label>
+            <input id="cap" type="number" value="100000" oninput="runCalc()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono focus:border-emerald-400 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1">CURRENT EQUITY ($)</label>
+            <input id="eq" type="number" value="98500" oninput="runCalc()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono focus:border-emerald-400 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 text-xs font-mono mb-5">
+          <div>
+            <label class="text-slate-400 block mb-1">RISK %</label>
+            <input id="risk" type="number" step="0.1" value="0.5" oninput="runCalc()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono focus:border-emerald-400 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1">STOP LOSS</label>
+            <input id="sl" type="number" value="15" oninput="runCalc()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono focus:border-emerald-400 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1">ASSET</label>
+            <select id="asset" onchange="runCalc()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-2 text-white font-mono focus:border-emerald-400 focus:outline-none">
+              <option value="10">Forex ($10/pip)</option>
+              <option value="1">Gold ($1/pip)</option>
+              <option value="20">NQ/NAS100 ($20/pt)</option>
+              <option value="12.5">ES/US500 ($12.5/pt)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Calculated Output Cards -->
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div class="bg-slate-950/80 p-3.5 rounded-xl border border-emerald-500/30">
+            <div class="text-[10px] mono text-slate-400">RECOMMENDED LOTS</div>
+            <div id="outLot" class="text-2xl font-black mono text-emerald-400 mt-1">3.33 Lots</div>
+            <div id="outRisk" class="text-xs mono text-slate-400 mt-0.5">$500.00 Risk (0.50%)</div>
+          </div>
+          <div class="bg-slate-950/80 p-3.5 rounded-xl border border-amber-500/30">
+            <div class="text-[10px] mono text-slate-400">DRAWDOWN BUFFER</div>
+            <div id="outBuffer" class="text-2xl font-black mono text-amber-400 mt-1">$8,500 Left</div>
+            <div id="outTrades" class="text-xs mono text-slate-400 mt-0.5">17 Trades to Max DD</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="statusPill" class="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs text-center font-bold">
+        🟢 QUANTITATIVE RISK LOCK: SAFE TO EXECUTE
+      </div>
+    </div>
+
+    <!-- Tool 2: Interactive 7-Point SMC Pre-Trade Gatekeeper -->
+    <div class="glass-gold p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-3 mb-5">
+          <div class="flex items-center gap-2">
+            <span class="text-amber-400 text-lg">🎯</span>
+            <span class="font-bold text-white text-base">7-Point SMC Pre-Trade Gatekeeper</span>
+          </div>
+          <span class="mono text-xs text-emerald-400 font-bold bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/30">MODULE 02</span>
+        </div>
+
+        <div class="space-y-2 text-xs font-mono mb-5">
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer">
+            <span class="text-slate-300">1. HTF Draw on Liquidity (PDH/PDL/EQH)</span>
+            <input type="checkbox" checked onchange="calcGatekeeper()" class="w-4 h-4 accent-emerald-500">
+          </label>
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800 hover:border-amber-500/40 cursor-pointer">
+            <span class="text-slate-300">2. Correlated SMT Divergence Confirmed</span>
+            <input type="checkbox" checked onchange="calcGatekeeper()" class="w-4 h-4 accent-amber-500">
+          </label>
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer">
+            <span class="text-slate-300">3. Killzone Timing (London / NY Open)</span>
+            <input type="checkbox" checked onchange="calcGatekeeper()" class="w-4 h-4 accent-emerald-500">
+          </label>
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer">
+            <span class="text-slate-300">4. Liquidity Sweep Executed (Stop Run)</span>
+            <input type="checkbox" checked onchange="calcGatekeeper()" class="w-4 h-4 accent-emerald-500">
+          </label>
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer">
+            <span class="text-slate-300">5. Displacement + MSS + Fair Value Gap</span>
+            <input type="checkbox" checked onchange="calcGatekeeper()" class="w-4 h-4 accent-emerald-500">
+          </label>
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800 hover:border-amber-500/40 cursor-pointer">
+            <span class="text-slate-300">6. Minimum 2:1 Asymmetric R:R Math</span>
+            <input type="checkbox" checked onchange="calcGatekeeper()" class="w-4 h-4 accent-amber-500">
+          </label>
+          <label class="flex items-center justify-between p-2 rounded bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer">
+            <span class="text-slate-300">7. Zero High-Impact News Within 15 Mins</span>
+            <input type="checkbox" checked onchange="calcGatekeeper()" class="w-4 h-4 accent-emerald-500">
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between bg-slate-950 p-3.5 rounded-xl border border-amber-500/30 mb-3">
+          <span class="mono text-xs text-slate-400">SCORE: <strong id="gateScore" class="text-xl text-amber-400 ml-1">7 / 7</strong></span>
+          <span id="gateVerdict" class="mono text-xs px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40">
+            🟢 A+ SETUP APPROVED
+          </span>
+        </div>
+        <div class="text-[11px] text-center text-slate-400 font-mono">
+          *If score &lt; 5/7, the OS protocol forbids opening broker orders.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function runCalc() {
+      const cap = parseFloat(document.getElementById('cap').value) || 100000;
+      const eq = parseFloat(document.getElementById('eq').value) || 98500;
+      const riskPct = parseFloat(document.getElementById('risk').value) || 0.5;
+      const sl = parseFloat(document.getElementById('sl').value) || 15;
+      const pipVal = parseFloat(document.getElementById('asset').value) || 10;
+
+      const riskDollar = cap * (riskPct / 100);
+      const lots = riskDollar / (sl * pipVal);
+      const maxDDLimit = cap * 0.90; // 10% max trailing DD
+      const ddRemaining = eq - maxDDLimit;
+      const tradesLeft = Math.max(0, Math.floor(ddRemaining / riskDollar));
+
+      document.getElementById('outLot').innerText = lots.toFixed(2) + ' Lots';
+      document.getElementById('outRisk').innerText = '$' + riskDollar.toFixed(2) + ' Risk (' + riskPct.toFixed(2) + '%)';
+      document.getElementById('outBuffer').innerText = '$' + ddRemaining.toFixed(2) + ' Left';
+      document.getElementById('outTrades').innerText = tradesLeft + ' Trades to Max DD';
+
+      const pill = document.getElementById('statusPill');
+      if (ddRemaining <= cap * 0.03) {
+        pill.innerText = '🔴 HIGH RISK WARNING: CUT SIZING TO 0.25%';
+        pill.className = 'p-2.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 font-mono text-xs text-center font-bold';
+      } else {
+        pill.innerText = '🟢 QUANTITATIVE RISK LOCK: SAFE TO EXECUTE';
+        pill.className = 'p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs text-center font-bold';
+      }
+    }
+
+    function calcGatekeeper() {
+      const boxes = document.querySelectorAll('input[type="checkbox"]');
+      let count = 0;
+      boxes.forEach(b => { if (b.checked) count++; });
+
+      document.getElementById('gateScore').innerText = count + ' / 7';
+      const verdict = document.getElementById('gateVerdict');
+      if (count >= 6) {
+        verdict.innerText = '🟢 A+ SETUP APPROVED';
+        verdict.className = 'mono text-xs px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40';
+      } else if (count === 5) {
+        verdict.innerText = '🟢 B+ SETUP ELIGIBLE';
+        verdict.className = 'mono text-xs px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40';
+      } else {
+        verdict.innerText = '🔴 TRADE BLOCKED BY OS';
+        verdict.className = 'mono text-xs px-2.5 py-1 rounded bg-red-500/20 text-red-300 font-bold border border-red-500/40';
+      }
+    }
+
+    runCalc();
+  </script>
+</body>
+</html>
