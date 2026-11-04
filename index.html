@@ -594,7 +594,7 @@
           <p class="text-slate-300 text-xs font-sans leading-relaxed mb-6">Everything combined into one powerhouse package: Notion Workspace + Python MT5 Auto-Execution + TradingView Webhooks + Multi-Account Investor Bridge + Strategy Playbook.</p>
           
           <div class="flex items-baseline gap-3 mb-8 pb-6 border-b border-dark-border flex-wrap">
-            <span class="text-5xl sm:text-6xl font-black text-brand-emerald tracking-tight">$99</span>
+            <span class="text-5xl sm:text-6xl font-black text-brand-emerald tracking-tight">$97</span>
             <span class="text-lg text-slate-500 line-through font-mono">$199</span>
             <span class="text-xs text-slate-300 font-sans">one-time payment • zero subscription fees</span>
           </div>
@@ -613,8 +613,8 @@
           </div>
         </div>
 
-        <a href="#orderModal" onclick="openOrderModal('Complete Institutional Suite', 99)" class="w-full py-4 rounded-xl text-center text-xs font-bold uppercase tracking-wider text-dark-950 bg-gradient-to-r from-brand-emerald via-emerald-400 to-brand-cyan hover:from-emerald-300 hover:to-cyan-300 shadow-xl shadow-brand-emerald/30 transition block font-mono">
-          Claim Complete Institutional Suite ($99)
+        <a href="#orderModal" onclick="openOrderModal('Complete Institutional Suite', 97)" class="w-full py-4 rounded-xl text-center text-xs font-bold uppercase tracking-wider text-dark-950 bg-gradient-to-r from-brand-emerald via-emerald-400 to-brand-cyan hover:from-emerald-300 hover:to-cyan-300 shadow-xl shadow-brand-emerald/30 transition block font-mono">
+          Claim Complete Institutional Suite ($97)
         </a>
       </div>
 
@@ -665,7 +665,7 @@
         <div id="orderStep2" class="hidden">
           <div class="text-[11px] text-brand-cyan font-bold uppercase tracking-widest mb-1 font-mono">Step 02 / 02 • Verified Gateway</div>
           <h3 class="text-xl font-bold text-white mb-2 font-mono">Select Payment Option</h3>
-          <p class="text-xs font-sans text-slate-400 mb-5">Pay via Razorpay Verified Checkout (UPI / Cards / Netbanking) or Gumroad (Global USD).</p>
+          <p class="text-xs font-sans text-slate-400 mb-5">Pay via Razorpay Verified Checkout (UPI / Cards / Netbanking) or Whop 1-Click Global Gateway (USD / PayPal / Crypto / Apple Pay).</p>
 
           <!-- TABS -->
           <div class="flex border-b border-dark-border mb-5">
@@ -673,7 +673,7 @@
               🇮🇳 Razorpay / UPI (₹<span id="inrPriceText">8,499</span>)
             </button>
             <button type="button" id="tabBtnGum" onclick="switchPayTab('gum')" class="flex-1 pb-3 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white uppercase tracking-wider font-mono cursor-pointer">
-              🌐 Gumroad ($<span id="usdPriceText">99</span> USD)
+              🌐 Whop Global ($<span id="usdPriceText">97</span> USD)
             </button>
           </div>
 
@@ -722,19 +722,20 @@
           <!-- TAB CONTENT: GUMROAD GLOBAL -->
           <div id="tabContentGum" class="hidden space-y-4 text-center">
             <div class="p-5 rounded-2xl bg-dark-900 border border-dark-border text-left space-y-2">
-              <div class="text-xs font-bold text-white">Instant Global Checkout via Gumroad</div>
+              <div class="text-xs font-bold text-white">Instant 1-Click Global Checkout via Whop</div>
               <p class="text-xs text-slate-400">
-                Ideal for international traders outside India. Automated payment in USD with automatic license fulfillment directly from Gumroad's servers.
+                Institutional global checkout with immediate access to your LiquiQuant Trader Hub & Master Suite. 256-bit SSL encrypted.
               </p>
               <ul class="text-[11px] text-slate-300 space-y-1 font-mono pt-1">
                 <li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> Visa / Mastercard / American Express</li>
-                <li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> Apple Pay & PayPal Verified</li>
-                <li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> Automated Digital Dispatch to Inbox</li>
+                <li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> Apple Pay, Google Pay & Credit/Debit Cards</li>
+                <li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> PayPal & Crypto (USDC / BTC / ETH) Verified</li>
+                <li class="flex items-center gap-2"><span class="text-brand-emerald">✓</span> Automated Digital Dispatch & Whop Dashboard Hub Access</li>
               </ul>
             </div>
 
-            <a id="gumroadCheckoutLink" href="https://liquiquant.gumroad.com/l/rxulg" target="_blank" class="w-full py-4 rounded-xl text-center text-xs font-bold uppercase tracking-wider text-dark-950 bg-gradient-to-r from-brand-cyan to-teal-400 hover:from-cyan-300 hover:to-teal-300 shadow-lg shadow-brand-cyan/25 transition block font-mono">
-              Proceed to Gumroad Checkout ($<span id="gumPriceText">99</span> USD) ↗
+            <a id="gumroadCheckoutLink" href="https://whop.com/checkout/plan_jJsSff7QMjHUd" target="_blank" class="w-full py-4 rounded-xl text-center text-xs font-bold uppercase tracking-wider text-dark-950 bg-gradient-to-r from-brand-cyan to-teal-400 hover:from-cyan-300 hover:to-teal-300 shadow-lg shadow-brand-cyan/25 transition block font-mono">
+              Proceed to Whop Checkout ($<span id="gumPriceText">97</span> USD) ↗
             </a>
           </div>
 
@@ -870,9 +871,10 @@
 
     const RAZORPAY_KEY = 'rzp_live_TpGXKuLNlkoW5p';
 
-    const GUM_LINKS = {
-      39: 'https://liquiquant.gumroad.com/l/rxulg',
-      99: 'https://liquiquant.gumroad.com/l/rxulg'
+    const WHOP_LINKS = {
+      39: 'https://whop.com/checkout/plan_1RS76EFpaRH0T',
+      97: 'https://whop.com/checkout/plan_jJsSff7QMjHUd',
+      99: 'https://whop.com/checkout/plan_jJsSff7QMjHUd'
     };
 
     function openOrderModal(tier, price) {
@@ -889,7 +891,7 @@
       document.getElementById('btnInrPrice').innerText = selectedInrPrice.toLocaleString('en-IN');
 
       // Configure Gumroad link
-      document.getElementById('gumroadCheckoutLink').href = GUM_LINKS[price] || GUM_LINKS[99];
+      document.getElementById('gumroadCheckoutLink').href = WHOP_LINKS[price] || WHOP_LINKS[97];
 
       // Reset views
       document.getElementById('orderStep1').classList.remove('hidden');

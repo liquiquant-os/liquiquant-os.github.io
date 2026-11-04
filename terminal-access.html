@@ -79,7 +79,7 @@
       <div class="text-xs font-mono font-bold text-rose-400 uppercase tracking-widest mb-1">Access Denied • Cryptographic Gate</div>
       <h1 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">No Confirmed Payment Detected</h1>
       <p class="text-slate-400 text-sm max-w-lg mx-auto mb-6 leading-relaxed">
-        This terminal hub is locked. Files and workspace transfers are only released after a confirmed, bank-verified transaction ID from Razorpay or Gumroad.
+        This terminal hub is locked. Files and workspace transfers are only released after a confirmed, bank-verified transaction ID from Razorpay or Whop.
       </p>
       <div class="p-4 rounded-xl bg-dark-950 border border-dark-border max-w-md mx-auto text-xs text-slate-400 font-mono text-left mb-6 space-y-1">
         <div><span class="text-slate-600">Verification Error:</span> <span class="text-rose-400 font-bold">MISSING_PAYMENT_PROOF</span></div>
@@ -218,12 +218,12 @@
     const source = params.get('source');
     const tier = params.get('tier');
 
-    const isVerified = (paymentId && (paymentId.startsWith('pay_') || paymentId.startsWith('plink_'))) || (source === 'gumroad_verified');
+    const isVerified = (paymentId && (paymentId.startsWith('pay_') || paymentId.startsWith('plink_'))) || ((source === 'gumroad_verified' || source === 'whop_verified'));
 
     if (isVerified) {
       document.getElementById('unlockedContent').classList.remove('hidden');
       document.getElementById('unauthorizedCard').classList.add('hidden');
-      document.getElementById('refBadge').innerText = paymentId || 'GUMROAD-VERIFIED';
+      document.getElementById('refBadge').innerText = paymentId || 'WHOP-VERIFIED';
       if (tier) document.getElementById('editionBadge').innerText = tier;
     } else {
       // DENY ACCESS
